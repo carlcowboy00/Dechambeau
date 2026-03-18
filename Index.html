@@ -4,54 +4,33 @@
 <meta charset="UTF-8">
 <meta name="viewport" content="width=device-width, initial-scale=1.0">
 <title>DeChambeaurdle</title>
+<!-- Google Analytics -->
+<script async src="https://www.googletagmanager.com/gtag/js?id=G-PGMT3T96ZK"></script>
+<script>
+  window.dataLayer = window.dataLayer || [];
+  function gtag(){dataLayer.push(arguments);}
+  gtag('js', new Date());
+  gtag('config', 'G-PGMT3T96ZK');
+</script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f7f4ee;
-    --bg2: #ede9e0;
-    --border: #d4cfc4;
-    --text: #1c1a16;
-    --text2: #6b6459;
-    --correct-bg: #d1fae5;
-    --correct-border: #6ee7b7;
-    --correct-text: #065f46;
-    --close-bg: #fef3c7;
-    --close-border: #fcd34d;
-    --close-text: #92400e;
-    --wrong-bg: #f1f5f9;
-    --wrong-border: #cbd5e1;
-    --wrong-text: #334155;
-    --gold: #b8860b;
-    --header-bg: #1c1a16;
+    --bg: #f7f4ee; --bg2: #ede9e0; --border: #d4cfc4; --text: #1c1a16; --text2: #6b6459;
+    --correct-bg: #d1fae5; --correct-border: #6ee7b7; --correct-text: #065f46;
+    --close-bg: #fef3c7; --close-border: #fcd34d; --close-text: #92400e;
+    --wrong-bg: #f1f5f9; --wrong-border: #cbd5e1; --wrong-text: #334155;
+    --gold: #b8860b; --header-bg: #1c1a16;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body {
-    background: var(--bg);
-    color: var(--text);
-    font-family: 'DM Sans', sans-serif;
-    min-height: 100vh;
-  }
-  header {
-    background: var(--header-bg);
-    padding: 14px 24px;
-    display: flex;
-    align-items: center;
-    justify-content: space-between;
-    border-bottom: 3px solid var(--gold);
-  }
+  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
+  header { background: var(--header-bg); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); }
   .header-left { display: flex; align-items: baseline; gap: 14px; }
-  h1 {
-    font-family: 'Bebas Neue', sans-serif;
-    font-size: clamp(1.3rem, 4vw, 2rem);
-    color: #f7f4ee;
-    letter-spacing: 4px;
-    line-height: 1;
-  }
+  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.3rem, 4vw, 2rem); color: #f7f4ee; letter-spacing: 4px; line-height: 1; }
   .tagline { font-size: 11px; color: rgba(247,244,238,0.4); letter-spacing: 2px; text-transform: uppercase; }
   .pip-row { display: flex; gap: 5px; }
   .pip { width: 11px; height: 11px; border-radius: 50%; background: rgba(247,244,238,0.18); transition: background 0.3s; }
   .pip.used { background: #94a3b8; }
-  .pip.won  { background: #4ade80; }
+  .pip.won { background: #4ade80; }
   .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
   .mode-toggle { display: flex; background: rgba(255,255,255,0.08); border-radius: 8px; padding: 3px; gap: 3px; }
   .mode-btn { background: transparent; border: none; border-radius: 6px; padding: 5px 12px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: rgba(247,244,238,0.5); cursor: pointer; transition: all 0.18s; white-space: nowrap; }
@@ -117,6 +96,9 @@
   .m-btn-close { background: transparent; color: var(--text2); border: 1.5px solid var(--border); }
   .m-btn-close:hover { background: var(--bg); }
   .modal-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+  .bmc-bar { text-align: center; padding: 24px 16px 40px; border-top: 1px solid var(--border); margin-top: 10px; }
+  .bmc-btn { display: inline-flex; align-items: center; gap: 8px; background: #FFDD00; color: #000; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s; }
+  .bmc-btn:hover { opacity: 0.85; }
   ::-webkit-scrollbar { width: 4px; }
   ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
   @media (max-width: 600px) {
@@ -160,7 +142,7 @@
       Guess the mystery professional golfer in <strong>8 attempts</strong>. Each guess reveals clues across 7 categories.<br><br>
       <span style="color:var(--correct-text);font-weight:700">Green</span> = exact &nbsp;·&nbsp;
       <span style="color:var(--close-text);font-weight:700">Yellow</span> = close (age ±3, rank ±15, turned pro ±2, majors ±2, same region) &nbsp;·&nbsp;
-      <span style="color:var(--wrong-text);font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or PGA Past.
+      <span style="color:var(--wrong-text);font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or Past.
     </div>
   </details>
   <div class="legend">
@@ -180,6 +162,9 @@
     <div class="ch">Tour</div>
   </div>
   <div class="guess-grid" id="grid"></div>
+  <div class="bmc-bar">
+    <a class="bmc-btn" href="https://buymeacoffee.com/dechambeaurdle" target="_blank" rel="noopener">☕ Buy me a coffee</a>
+  </div>
 </main>
 <div class="overlay" id="overlay">
   <div class="modal">
@@ -362,132 +347,68 @@ function setMode(newMode) {
   document.getElementById('tagline').textContent = newMode === 'daily' ? 'Daily golfer puzzle' : 'Shuffle mode';
   if (newMode === 'daily') { initDailyGame(); } else { initShuffleGame(); }
 }
-
 function getDailyIndex() {
   const epoch = new Date('2025-01-01');
   const now = new Date();
-  const diff = Math.floor((now - epoch) / 86400000);
-  return diff % PLAYERS.length;
+  return Math.floor((now - epoch) / 86400000) % PLAYERS.length;
 }
-
 function getTodayKey() {
   const d = new Date();
   return `dcbaurdle_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
 }
-
 function initDailyGame() {
   todayKey = getTodayKey();
   target = PLAYERS[getDailyIndex()];
-  guesses = [];
-  gameOver = false;
+  guesses = []; gameOver = false;
   try {
     const saved = JSON.parse(localStorage.getItem(todayKey) || 'null');
     if (saved) {
-      saved.guesses.forEach(name => {
-        const p = PLAYERS.find(pl => pl.name === name);
-        if (p) guesses.push({ player: p });
-      });
+      saved.guesses.forEach(name => { const p = PLAYERS.find(pl => pl.name === name); if (p) guesses.push({ player: p }); });
       gameOver = saved.gameOver;
     }
   } catch(e) {}
   resetUI();
-  if (gameOver) {
-    const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name;
-    setTimeout(() => showModal(won, won ? getWinTitle() : 'Out of Bounds', true), 300);
-  }
+  if (gameOver) { const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name; setTimeout(() => showModal(won, won ? getWinTitle() : 'Out of Bounds', true), 300); }
 }
-
 function initShuffleGame() {
-  let idx;
-  do { idx = Math.floor(Math.random() * PLAYERS.length); }
-  while (PLAYERS[idx] === target && PLAYERS.length > 1);
-  target = PLAYERS[idx];
-  guesses = [];
-  gameOver = false;
-  resetUI();
+  let idx; do { idx = Math.floor(Math.random() * PLAYERS.length); } while (PLAYERS[idx] === target && PLAYERS.length > 1);
+  target = PLAYERS[idx]; guesses = []; gameOver = false; resetUI();
 }
-
 function initGame() { setMode('daily'); }
-
 function resetUI() {
-  renderGrid();
-  renderPips();
-  setMsg('');
+  renderGrid(); renderPips(); setMsg('');
   const inp = document.getElementById('player-input');
-  inp.value = '';
-  inp.disabled = gameOver;
+  inp.value = ''; inp.disabled = gameOver;
   document.getElementById('guess-btn').disabled = gameOver;
   document.getElementById('overlay').classList.remove('show');
   document.getElementById('suggestions').classList.remove('show');
 }
-
 function getWinTitle() {
-  const titles = ['Hole in One! 🎯','Eagle!','Birdie!','Par.','Bogey…','Double Bogey','Triple Bogey','Made the Cut…'];
-  return titles[guesses.length - 1] || 'Made the Cut';
+  return ['Hole in One! 🎯','Eagle!','Birdie!','Par.','Bogey…','Double Bogey','Triple Bogey','Made the Cut…'][guesses.length - 1] || 'Made the Cut';
 }
-
 function saveState() {
   if (mode !== 'daily') return;
   localStorage.setItem(todayKey, JSON.stringify({ guesses: guesses.map(g => g.player.name), gameOver }));
 }
-
-function newGame() {
-  document.getElementById('overlay').classList.remove('show');
-  if (mode === 'shuffle') initShuffleGame();
-}
-
+function newGame() { document.getElementById('overlay').classList.remove('show'); if (mode === 'shuffle') initShuffleGame(); }
 function renderPips() {
-  const row = document.getElementById('pips');
-  row.innerHTML = '';
-  for (let i = 0; i < MAX; i++) {
-    const p = document.createElement('div');
-    p.className = 'pip';
-    if (i < guesses.length) p.classList.add(guesses[i].player.name === target.name ? 'won' : 'used');
-    row.appendChild(p);
-  }
+  const row = document.getElementById('pips'); row.innerHTML = '';
+  for (let i = 0; i < MAX; i++) { const p = document.createElement('div'); p.className = 'pip'; if (i < guesses.length) p.classList.add(guesses[i].player.name === target.name ? 'won' : 'used'); row.appendChild(p); }
 }
-
 function renderGrid() {
-  const grid = document.getElementById('grid');
-  grid.innerHTML = '';
+  const grid = document.getElementById('grid'); grid.innerHTML = '';
   for (let i = 0; i < MAX; i++) {
-    const row = document.createElement('div');
-    row.className = 'guess-row';
-    if (i < guesses.length) {
-      makeCells(guesses[i].player).forEach((cell, ci) => {
-        cell.classList.add('anim');
-        cell.style.animationDelay = (ci * 55) + 'ms';
-        row.appendChild(cell);
-      });
-    } else {
-      for (let j = 0; j < 7; j++) {
-        const c = document.createElement('div');
-        c.className = 'cell empty';
-        row.appendChild(c);
-      }
-    }
+    const row = document.createElement('div'); row.className = 'guess-row';
+    if (i < guesses.length) { makeCells(guesses[i].player).forEach((cell, ci) => { cell.classList.add('anim'); cell.style.animationDelay = (ci * 55) + 'ms'; row.appendChild(cell); }); }
+    else { for (let j = 0; j < 7; j++) { const c = document.createElement('div'); c.className = 'cell empty'; row.appendChild(c); } }
     grid.appendChild(row);
   }
 }
-
-function gradeNum(val, tgt, close) {
-  if (val === tgt) return 'correct';
-  return Math.abs(val - tgt) <= close ? 'close' : 'wrong';
-}
-
+function gradeNum(val, tgt, close) { if (val === tgt) return 'correct'; return Math.abs(val - tgt) <= close ? 'close' : 'wrong'; }
 function makeCells(p) {
-  const t = target;
-  const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
-  function tourGrade(a, b) {
-    if (a === b) return 'correct';
-    const cat = x => x.startsWith('LIV') ? 'LIV' : x;
-    return cat(a) === cat(b) ? 'close' : 'wrong';
-  }
-  function tourDisplay(tour) {
-    if (tour === 'PGA') return 'PGA';
-    if (tour === 'Past') return 'Past';
-    return tour.replace('LIV: ', '');
-  }
+  const t = target; const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
+  function tourGrade(a, b) { if (a === b) return 'correct'; const cat = x => x.startsWith('LIV') ? 'LIV' : x; return cat(a) === cat(b) ? 'close' : 'wrong'; }
+  function tourDisplay(tour) { if (tour === 'PGA') return 'PGA'; if (tour === 'Past') return 'Past'; return tour.replace('LIV: ', ''); }
   const defs = [
     { display: p.name, result: p.name === t.name ? 'correct' : 'wrong', arrow: null },
     { display: p.nat, result: p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong', arrow: null },
@@ -497,155 +418,65 @@ function makeCells(p) {
     { display: String(p.majors), result: gradeNum(p.majors, t.majors, 2), arrow: p.majors !== t.majors ? (p.majors < t.majors ? '↑' : '↓') : null },
     { display: tourDisplay(p.tour), result: tourGrade(p.tour, t.tour), arrow: null },
   ];
-  return defs.map((d) => {
-    const cell = document.createElement('div');
-    cell.className = `cell ${d.result}`;
-    if (d.arrow && d.result !== 'correct') {
-      cell.innerHTML = d.display + `<span class="arrow">${d.arrow}</span>`;
-    } else {
-      cell.textContent = d.display;
-    }
-    return cell;
-  });
+  return defs.map(d => { const cell = document.createElement('div'); cell.className = `cell ${d.result}`; if (d.arrow && d.result !== 'correct') { cell.innerHTML = d.display + `<span class="arrow">${d.arrow}</span>`; } else { cell.textContent = d.display; } return cell; });
 }
-
 function setMsg(txt) { document.getElementById('msg').textContent = txt; }
-
 function submitGuess(name) {
   if (gameOver || !name.trim()) return;
   const player = PLAYERS.find(p => p.name.toLowerCase() === name.trim().toLowerCase());
   if (!player) { setMsg('Golfer not found — select from the dropdown.'); return; }
   if (guesses.find(g => g.player.name === player.name)) { setMsg('Already guessed that player.'); return; }
-  guesses.push({ player });
-  renderGrid();
-  renderPips();
-  document.getElementById('player-input').value = '';
-  document.getElementById('suggestions').classList.remove('show');
-  if (player.name === target.name) {
-    gameOver = true;
-    saveState();
-    setTimeout(() => showModal(true, getWinTitle(), false), 500);
-  } else if (guesses.length >= MAX) {
-    gameOver = true;
-    saveState();
-    setTimeout(() => showModal(false, 'Out of Bounds', false), 500);
-  } else {
-    saveState();
-    const h = ['Good start.','Check those clues.','Keep going.','Halfway there.','Stay focused.','Read the green.','Last chance.'];
-    setMsg(h[guesses.length - 1] || '');
-  }
+  guesses.push({ player }); renderGrid(); renderPips();
+  document.getElementById('player-input').value = ''; document.getElementById('suggestions').classList.remove('show');
+  if (player.name === target.name) { gameOver = true; saveState(); setTimeout(() => showModal(true, getWinTitle(), false), 500); }
+  else if (guesses.length >= MAX) { gameOver = true; saveState(); setTimeout(() => showModal(false, 'Out of Bounds', false), 500); }
+  else { saveState(); setMsg(['Good start.','Check those clues.','Keep going.','Halfway there.','Stay focused.','Read the green.','Last chance.'][guesses.length - 1] || ''); }
   document.getElementById('player-input').disabled = gameOver;
   document.getElementById('guess-btn').disabled = gameOver;
 }
-
 function buildShareText(won) {
-  const d = new Date();
-  const dateStr = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+  const d = new Date(); const dateStr = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
   const result = won ? `${guesses.length}/${MAX}` : `X/${MAX}`;
-  const emojiRows = guesses.map(g => buildEmojiRow(g.player).join(''));
-  return `DeChambeaurdle ${dateStr} ${result}\n\n${emojiRows.join('\n')}\n\n⛳ Play at [your link here]`;
+  return `DeChambeaurdle ${dateStr} ${result}\n\n${guesses.map(g => buildEmojiRow(g.player).join('')).join('\n')}\n\n⛳ Play at https://dechambeaurdlee.netlify.app`;
 }
-
 function buildEmojiRow(p) {
-  const t = target;
-  const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
-  function tourGrade(a, b) {
-    if (a === b) return 'correct';
-    const cat = x => x.startsWith('LIV') ? 'LIV' : x;
-    return cat(a) === cat(b) ? 'close' : 'wrong';
-  }
-  const grades = [
-    p.name === t.name ? 'correct' : 'wrong',
-    p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong',
-    gradeNum(p.age, t.age, 3),
-    gradeNum(p.rank, t.rank, rankRange),
-    gradeNum(p.pro, t.pro, 2),
-    gradeNum(p.majors, t.majors, 2),
-    tourGrade(p.tour, t.tour),
-  ];
-  return grades.map(g => g === 'correct' ? '🟩' : g === 'close' ? '🟨' : '⬜');
+  const t = target; const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
+  function tourGrade(a, b) { if (a === b) return 'correct'; const cat = x => x.startsWith('LIV') ? 'LIV' : x; return cat(a) === cat(b) ? 'close' : 'wrong'; }
+  return [p.name === t.name ? 'correct' : 'wrong', p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong', gradeNum(p.age, t.age, 3), gradeNum(p.rank, t.rank, rankRange), gradeNum(p.pro, t.pro, 2), gradeNum(p.majors, t.majors, 2), tourGrade(p.tour, t.tour)].map(g => g === 'correct' ? '🟩' : g === 'close' ? '🟨' : '⬜');
 }
-
 function showModal(won, title, isRestore) {
   let s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0');
-  if (!isRestore) { s = won ? s + 1 : 0; localStorage.setItem('dcbaurdle_streak', s); }
-  else { s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0'); }
+  if (!isRestore) { s = won ? s + 1 : 0; localStorage.setItem('dcbaurdle_streak', s); } else { s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0'); }
   document.getElementById('m-icon').textContent = won ? '🏆' : '😔';
   document.getElementById('m-title').textContent = title;
-  document.getElementById('m-msg').textContent = won
-    ? `Identified in ${guesses.length} guess${guesses.length !== 1 ? 'es' : ''}!`
-    : (mode === 'daily' ? 'Better luck tomorrow.' : 'Better luck next time.');
+  document.getElementById('m-msg').textContent = won ? `Identified in ${guesses.length} guess${guesses.length !== 1 ? 'es' : ''}!` : (mode === 'daily' ? 'Better luck tomorrow.' : 'Better luck next time.');
   document.getElementById('m-answer').textContent = '⛳  ' + target.name;
   document.getElementById('s-guesses').textContent = won ? guesses.length : '✗';
   document.getElementById('s-streak').textContent = s;
-  const shareBtn = document.getElementById('share-btn');
-  const nextBtn = document.getElementById('next-btn');
-  const closeBtn = document.getElementById('close-btn');
-  if (mode === 'shuffle') {
-    shareBtn.style.display = 'none';
-    nextBtn.style.display = 'inline-block';
-    closeBtn.style.display = 'none';
-  } else {
-    shareBtn.style.display = 'inline-block';
-    nextBtn.style.display = 'none';
-    closeBtn.style.display = 'inline-block';
-  }
+  const shareBtn = document.getElementById('share-btn'); const nextBtn = document.getElementById('next-btn'); const closeBtn = document.getElementById('close-btn');
+  if (mode === 'shuffle') { shareBtn.style.display = 'none'; nextBtn.style.display = 'inline-block'; closeBtn.style.display = 'none'; }
+  else { shareBtn.style.display = 'inline-block'; nextBtn.style.display = 'none'; closeBtn.style.display = 'inline-block'; }
   document.getElementById('overlay').classList.add('show');
 }
-
 function shareResult() {
   const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name;
-  const txt = buildShareText(won);
-  const btn = document.getElementById('share-btn');
-  const doFallback = () => {
-    try {
-      const ta = document.createElement('textarea');
-      ta.value = txt;
-      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
-      document.body.appendChild(ta);
-      ta.focus();
-      ta.select();
-      document.execCommand('copy');
-      document.body.removeChild(ta);
-      btn.textContent = '✓ Copied!';
-      setTimeout(() => btn.textContent = '📋 Share Result', 2000);
-    } catch(e) {
-      prompt('Copy your result:', txt);
-    }
-  };
-  if (navigator.clipboard && window.isSecureContext) {
-    navigator.clipboard.writeText(txt)
-      .then(() => { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Share Result', 2000); })
-      .catch(doFallback);
-  } else { doFallback(); }
+  const txt = buildShareText(won); const btn = document.getElementById('share-btn');
+  const doFallback = () => { try { const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Share Result', 2000); } catch(e) { prompt('Copy your result:', txt); } };
+  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(txt).then(() => { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Share Result', 2000); }).catch(doFallback); } else { doFallback(); }
 }
-
-const inp = document.getElementById('player-input');
-const box = document.getElementById('suggestions');
+const inp = document.getElementById('player-input'); const box = document.getElementById('suggestions');
 inp.addEventListener('input', () => {
-  const v = inp.value.trim().toLowerCase();
-  if (!v) { box.classList.remove('show'); return; }
+  const v = inp.value.trim().toLowerCase(); if (!v) { box.classList.remove('show'); return; }
   const used = new Set(guesses.map(g => g.player.name));
   const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(v) && !used.has(p.name)).slice(0, 8);
   if (!matches.length) { box.classList.remove('show'); return; }
-  box.innerHTML = matches.map(p =>
-    `<div class="sugg-item" data-name="${p.name}"><span>${p.name}</span><span class="sugg-meta">${p.nat}</span></div>`
-  ).join('');
+  box.innerHTML = matches.map(p => `<div class="sugg-item" data-name="${p.name}"><span>${p.name}</span><span class="sugg-meta">${p.nat}</span></div>`).join('');
   box.classList.add('show');
 });
-box.addEventListener('click', e => {
-  const item = e.target.closest('.sugg-item');
-  if (item) { inp.value = item.dataset.name; box.classList.remove('show'); submitGuess(item.dataset.name); }
-});
+box.addEventListener('click', e => { const item = e.target.closest('.sugg-item'); if (item) { inp.value = item.dataset.name; box.classList.remove('show'); submitGuess(item.dataset.name); } });
 document.getElementById('guess-btn').addEventListener('click', () => submitGuess(inp.value));
-inp.addEventListener('keydown', e => {
-  if (e.key === 'Enter') submitGuess(inp.value);
-  if (e.key === 'Escape') box.classList.remove('show');
-});
-document.addEventListener('click', e => {
-  if (!e.target.closest('.input-inner')) box.classList.remove('show');
-});
-
+inp.addEventListener('keydown', e => { if (e.key === 'Enter') submitGuess(inp.value); if (e.key === 'Escape') box.classList.remove('show'); });
+document.addEventListener('click', e => { if (!e.target.closest('.input-inner')) box.classList.remove('show'); });
 initGame();
 </script>
 </body>
