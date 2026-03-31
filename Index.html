@@ -1,4 +1,5 @@
 <!DOCTYPE html>
+
 <html lang="en">
 <head>
 <meta charset="UTF-8">
@@ -15,103 +16,364 @@
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
   :root {
-    --bg: #f7f4ee; --bg2: #ede9e0; --border: #d4cfc4; --text: #1c1a16; --text2: #6b6459;
-    --correct-bg: #d1fae5; --correct-border: #6ee7b7; --correct-text: #065f46;
-    --close-bg: #fef3c7; --close-border: #fcd34d; --close-text: #92400e;
-    --wrong-bg: #f1f5f9; --wrong-border: #cbd5e1; --wrong-text: #334155;
-    --gold: #b8860b; --header-bg: #1c1a16;
+    --bg: #f7f4ee;
+    --bg2: #ede9e0;
+    --border: #d4cfc4;
+    --text: #1c1a16;
+    --text2: #6b6459;
+    --correct-bg: #d1fae5;
+    --correct-border: #6ee7b7;
+    --correct-text: #065f46;
+    --close-bg: #fef3c7;
+    --close-border: #fcd34d;
+    --close-text: #92400e;
+    --wrong-bg: #f1f5f9;
+    --wrong-border: #cbd5e1;
+    --wrong-text: #334155;
+    --gold: #b8860b;
+    --header-bg: #1c1a16;
   }
   * { box-sizing: border-box; margin: 0; padding: 0; }
-  body { background: var(--bg); color: var(--text); font-family: 'DM Sans', sans-serif; min-height: 100vh; }
-  header { background: var(--header-bg); padding: 14px 24px; display: flex; align-items: center; justify-content: space-between; border-bottom: 3px solid var(--gold); }
-  .header-left { display: flex; align-items: baseline; gap: 14px; }
-  h1 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.3rem, 4vw, 2rem); color: #f7f4ee; letter-spacing: 4px; line-height: 1; }
-  .tagline { font-size: 11px; color: rgba(247,244,238,0.4); letter-spacing: 2px; text-transform: uppercase; }
-  .pip-row { display: flex; gap: 5px; }
-  .pip { width: 11px; height: 11px; border-radius: 50%; background: rgba(247,244,238,0.18); transition: background 0.3s; }
-  .pip.used { background: #94a3b8; }
-  .pip.won { background: #4ade80; }
-  .header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
-  .mode-toggle { display: flex; background: rgba(255,255,255,0.08); border-radius: 8px; padding: 3px; gap: 3px; }
-  .mode-btn { background: transparent; border: none; border-radius: 6px; padding: 5px 12px; font-family: 'DM Sans', sans-serif; font-size: 11px; font-weight: 600; letter-spacing: 0.5px; color: rgba(247,244,238,0.5); cursor: pointer; transition: all 0.18s; white-space: nowrap; }
-  .mode-btn.active { background: var(--gold); color: #1c1a16; }
-  .mode-btn:not(.active):hover { color: rgba(247,244,238,0.85); }
-  .input-bar { position: sticky; top: 0; z-index: 80; background: #fff; border-bottom: 1px solid var(--border); box-shadow: 0 2px 10px rgba(0,0,0,0.07); padding: 12px 16px; }
-  .input-inner { max-width: 880px; margin: 0 auto; display: flex; gap: 8px; position: relative; }
-  .search-wrap { position: relative; flex: 1; }
-  .search-ico { position: absolute; left: 12px; top: 50%; transform: translateY(-50%); color: var(--text2); font-size: 15px; pointer-events: none; }
-  #player-input { width: 100%; border: 2px solid var(--border); border-radius: 8px; background: var(--bg); padding: 10px 12px 10px 38px; font-family: 'DM Sans', sans-serif; font-size: 14px; font-weight: 500; color: var(--text); outline: none; transition: border-color 0.2s; }
-  #player-input:focus { border-color: var(--text); background: #fff; }
-  #player-input::placeholder { color: var(--text2); font-weight: 400; }
-  #player-input:disabled { opacity: 0.4; cursor: not-allowed; }
-  .suggestions { position: absolute; top: calc(100% + 5px); left: 0; right: 0; background: #fff; border: 2px solid var(--text); border-radius: 8px; max-height: 240px; overflow-y: auto; display: none; z-index: 200; box-shadow: 4px 4px 0 rgba(0,0,0,0.1); }
-  .suggestions.show { display: block; }
-  .sugg-item { padding: 10px 14px; font-size: 13px; font-weight: 500; cursor: pointer; display: flex; justify-content: space-between; align-items: center; border-bottom: 1px solid var(--bg2); transition: background 0.1s; }
-  .sugg-item:last-child { border-bottom: none; }
-  .sugg-item:hover { background: var(--bg); }
-  .sugg-meta { font-size: 11px; color: var(--text2); font-weight: 400; }
-  #guess-btn { background: var(--text); color: #f7f4ee; border: none; border-radius: 8px; padding: 10px 22px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; white-space: nowrap; transition: background 0.15s; }
-  #guess-btn:hover { background: #2d2b26; }
-  #guess-btn:disabled { opacity: 0.3; cursor: not-allowed; }
-  main { max-width: 880px; margin: 0 auto; padding: 18px 16px 60px; }
-  details.how-to { margin-bottom: 14px; border: 1.5px solid var(--border); border-radius: 8px; background: #fff; overflow: hidden; }
-  details.how-to summary { padding: 9px 14px; cursor: pointer; font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); list-style: none; display: flex; justify-content: space-between; }
-  details.how-to summary::-webkit-details-marker { display: none; }
-  details.how-to summary::after { content: '▾'; }
-  details.how-to[open] summary::after { content: '▴'; }
-  .how-body { padding: 12px 14px 14px; font-size: 13px; color: var(--text2); line-height: 1.75; border-top: 1px solid var(--border); }
-  .legend { display: flex; align-items: center; gap: 10px; flex-wrap: wrap; margin-bottom: 14px; }
-  .legend-lbl { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); }
-  .lchip { padding: 3px 11px; border-radius: 5px; font-size: 11px; font-weight: 700; letter-spacing: 0.3px; }
-  .lc-g { background: var(--correct-bg); color: var(--correct-text); border: 1.5px solid var(--correct-border); }
-  .lc-y { background: var(--close-bg); color: var(--close-text); border: 1.5px solid var(--close-border); }
-  .lc-s { background: var(--wrong-bg); color: var(--wrong-text); border: 1.5px solid var(--wrong-border); }
-  .msg-bar { min-height: 26px; font-family: 'DM Serif Display', serif; font-style: italic; font-size: 14px; color: var(--text2); margin-bottom: 12px; }
-  .col-heads { display: grid; grid-template-columns: 1.7fr 1fr 0.6fr 0.75fr 0.85fr 0.75fr 1fr; gap: 5px; margin-bottom: 5px; }
-  .ch { text-align: center; font-size: 9px; font-weight: 700; letter-spacing: 1.5px; text-transform: uppercase; color: var(--text2); padding: 4px 2px; }
-  .ch:first-child { text-align: left; padding-left: 10px; }
-  .guess-grid { display: flex; flex-direction: column; gap: 5px; }
-  .guess-row { display: grid; grid-template-columns: 1.7fr 1fr 0.6fr 0.75fr 0.85fr 0.75fr 1fr; gap: 5px; }
-  .cell { border-radius: 6px; padding: 9px 6px; text-align: center; font-size: 12px; font-weight: 600; min-height: 50px; display: flex; align-items: center; justify-content: center; line-height: 1.3; }
-  .cell:first-child { text-align: left; justify-content: flex-start; padding-left: 10px; font-size: 12px; }
-  .cell.empty { background: #fff; border: 1.5px solid var(--border); color: transparent; }
-  .cell.correct { background: var(--correct-bg); border: 1.5px solid var(--correct-border); color: var(--correct-text); }
-  .cell.close { background: var(--close-bg); border: 1.5px solid var(--close-border); color: var(--close-text); }
-  .cell.wrong { background: var(--wrong-bg); border: 1.5px solid var(--wrong-border); color: var(--wrong-text); }
-  .arrow { font-size: 10px; margin-left: 3px; opacity: 0.65; }
-  @keyframes reveal { from { opacity: 0; transform: scaleY(0.6); } to { opacity: 1; transform: scaleY(1); } }
-  .cell.anim { animation: reveal 0.28s ease forwards; }
-  .overlay { display: none; position: fixed; inset: 0; background: rgba(28,26,22,0.65); backdrop-filter: blur(6px); z-index: 300; align-items: center; justify-content: center; }
-  .overlay.show { display: flex; }
-  .modal { background: #fff; border: 2px solid var(--text); border-radius: 14px; padding: 36px 30px; max-width: 400px; width: 92%; text-align: center; box-shadow: 6px 6px 0 rgba(0,0,0,0.15); }
-  .m-icon { font-size: 46px; margin-bottom: 10px; }
-  .modal h2 { font-family: 'Bebas Neue', sans-serif; font-size: clamp(1.4rem, 5vw, 2rem); letter-spacing: 4px; color: var(--text); margin-bottom: 6px; }
-  .modal p { font-size: 14px; color: var(--text2); line-height: 1.6; }
-  .answer-box { font-family: 'DM Serif Display', serif; font-size: 19px; color: var(--text); margin: 14px 0; padding: 12px; background: var(--bg); border-radius: 8px; border: 1.5px solid var(--border); }
-  .m-stats { display: flex; justify-content: center; gap: 32px; margin: 14px 0 20px; }
-  .s-num { font-family: 'Bebas Neue', sans-serif; font-size: 2.2rem; letter-spacing: 2px; color: var(--text); line-height: 1; }
-  .s-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(--text2); }
-  .m-btn { background: var(--text); color: #f7f4ee; border: none; border-radius: 8px; padding: 12px 20px; font-family: 'DM Sans', sans-serif; font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase; cursor: pointer; margin: 4px; }
-  .m-btn:hover { background: #333; }
-  .m-btn-close { background: transparent; color: var(--text2); border: 1.5px solid var(--border); }
-  .m-btn-close:hover { background: var(--bg); }
-  .modal-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
-  .bmc-bar { text-align: center; padding: 24px 16px 40px; border-top: 1px solid var(--border); margin-top: 10px; }
-  .bmc-btn { display: inline-flex; align-items: center; gap: 8px; background: #FFDD00; color: #000; font-family: 'DM Sans', sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s; }
-  .bmc-btn:hover { opacity: 0.85; }
-  ::-webkit-scrollbar { width: 4px; }
-  ::-webkit-scrollbar-thumb { background: var(--border); border-radius: 2px; }
-  @media (max-width: 600px) {
-    .col-heads, .guess-row { grid-template-columns: 1.4fr 0.9fr 0.55fr 0.6fr 0.7fr 0.6fr 0.85fr; }
-    .cell, .ch { font-size: 9px; }
-    .cell { min-height: 44px; padding: 6px 3px; }
-    .cell:first-child { padding-left: 6px; }
-    h1 { font-size: 2rem; }
-    .tagline { display: none; }
+  body {
+    background: var(--bg);
+    color: var(--text);
+    font-family: 'DM Sans', sans-serif;
+    min-height: 100vh;
   }
+
+/* HEADER */
+header {
+background: var(–header-bg);
+padding: 14px 24px;
+display: flex;
+align-items: center;
+justify-content: space-between;
+border-bottom: 3px solid var(–gold);
+}
+.header-left { display: flex; align-items: baseline; gap: 14px; }
+h1 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(1.3rem, 4vw, 2rem);
+color: #f7f4ee;
+letter-spacing: 4px;
+line-height: 1;
+}
+.tagline { font-size: 11px; color: rgba(247,244,238,0.4); letter-spacing: 2px; text-transform: uppercase; }
+.pip-row { display: flex; gap: 5px; }
+.pip {
+width: 11px; height: 11px; border-radius: 50%;
+background: rgba(247,244,238,0.18);
+transition: background 0.3s;
+}
+.pip.used { background: #94a3b8; }
+.pip.won  { background: #4ade80; }
+.header-right { display: flex; flex-direction: column; align-items: flex-end; gap: 8px; }
+.mode-toggle {
+display: flex;
+background: rgba(255,255,255,0.08);
+border-radius: 8px;
+padding: 3px;
+gap: 3px;
+}
+.mode-btn {
+background: transparent;
+border: none;
+border-radius: 6px;
+padding: 5px 12px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 11px;
+font-weight: 600;
+letter-spacing: 0.5px;
+color: rgba(247,244,238,0.5);
+cursor: pointer;
+transition: all 0.18s;
+white-space: nowrap;
+}
+.mode-btn.active {
+background: var(–gold);
+color: #1c1a16;
+}
+.mode-btn:not(.active):hover { color: rgba(247,244,238,0.85); }
+
+/* STICKY INPUT BAR */
+.input-bar {
+position: sticky;
+top: 0;
+z-index: 80;
+background: #fff;
+border-bottom: 1px solid var(–border);
+box-shadow: 0 2px 10px rgba(0,0,0,0.07);
+padding: 12px 16px;
+}
+.input-inner {
+max-width: 880px;
+margin: 0 auto;
+display: flex;
+gap: 8px;
+position: relative;
+}
+.search-wrap { position: relative; flex: 1; }
+.search-ico {
+position: absolute; left: 12px; top: 50%;
+transform: translateY(-50%);
+color: var(–text2); font-size: 15px; pointer-events: none;
+}
+#player-input {
+width: 100%;
+border: 2px solid var(–border);
+border-radius: 8px;
+background: var(–bg);
+padding: 10px 12px 10px 38px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 14px;
+font-weight: 500;
+color: var(–text);
+outline: none;
+transition: border-color 0.2s;
+}
+#player-input:focus { border-color: var(–text); background: #fff; }
+#player-input::placeholder { color: var(–text2); font-weight: 400; }
+#player-input:disabled { opacity: 0.4; cursor: not-allowed; }
+
+.suggestions {
+position: absolute;
+top: calc(100% + 5px);
+left: 0; right: 0;
+background: #fff;
+border: 2px solid var(–text);
+border-radius: 8px;
+max-height: 240px;
+overflow-y: auto;
+display: none;
+z-index: 200;
+box-shadow: 4px 4px 0 rgba(0,0,0,0.1);
+}
+.suggestions.show { display: block; }
+.sugg-item {
+padding: 10px 14px;
+font-size: 13px;
+font-weight: 500;
+cursor: pointer;
+display: flex;
+justify-content: space-between;
+align-items: center;
+border-bottom: 1px solid var(–bg2);
+transition: background 0.1s;
+}
+.sugg-item:last-child { border-bottom: none; }
+.sugg-item:hover { background: var(–bg); }
+.sugg-meta { font-size: 11px; color: var(–text2); font-weight: 400; }
+
+#guess-btn {
+background: var(–text);
+color: #f7f4ee;
+border: none;
+border-radius: 8px;
+padding: 10px 22px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 12px;
+font-weight: 600;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+cursor: pointer;
+white-space: nowrap;
+transition: background 0.15s;
+}
+#guess-btn:hover { background: #2d2b26; }
+#guess-btn:disabled { opacity: 0.3; cursor: not-allowed; }
+
+/* MAIN */
+main {
+max-width: 880px;
+margin: 0 auto;
+padding: 18px 16px 60px;
+}
+
+/* HOW TO */
+details.how-to {
+margin-bottom: 14px;
+border: 1.5px solid var(–border);
+border-radius: 8px;
+background: #fff;
+overflow: hidden;
+}
+details.how-to summary {
+padding: 9px 14px;
+cursor: pointer;
+font-size: 10px;
+font-weight: 600;
+letter-spacing: 2px;
+text-transform: uppercase;
+color: var(–text2);
+list-style: none;
+display: flex;
+justify-content: space-between;
+}
+details.how-to summary::-webkit-details-marker { display: none; }
+details.how-to summary::after { content: ‘▾’; }
+details.how-to[open] summary::after { content: ‘▴’; }
+.how-body {
+padding: 12px 14px 14px;
+font-size: 13px;
+color: var(–text2);
+line-height: 1.75;
+border-top: 1px solid var(–border);
+}
+
+/* LEGEND */
+.legend {
+display: flex;
+align-items: center;
+gap: 10px;
+flex-wrap: wrap;
+margin-bottom: 14px;
+}
+.legend-lbl { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(–text2); }
+.lchip {
+padding: 3px 11px;
+border-radius: 5px;
+font-size: 11px;
+font-weight: 700;
+letter-spacing: 0.3px;
+}
+.lc-g { background: var(–correct-bg); color: var(–correct-text); border: 1.5px solid var(–correct-border); }
+.lc-y { background: var(–close-bg);   color: var(–close-text);   border: 1.5px solid var(–close-border); }
+.lc-s { background: var(–wrong-bg);   color: var(–wrong-text);   border: 1.5px solid var(–wrong-border); }
+
+/* MESSAGE */
+.msg-bar {
+min-height: 26px;
+font-family: ‘DM Serif Display’, serif;
+font-style: italic;
+font-size: 14px;
+color: var(–text2);
+margin-bottom: 12px;
+}
+
+/* COLUMN HEADERS */
+.col-heads {
+display: grid;
+grid-template-columns: 1.7fr 1fr 0.6fr 0.75fr 0.85fr 0.75fr 1fr;
+gap: 5px;
+margin-bottom: 5px;
+}
+.ch {
+text-align: center;
+font-size: 9px;
+font-weight: 700;
+letter-spacing: 1.5px;
+text-transform: uppercase;
+color: var(–text2);
+padding: 4px 2px;
+}
+.ch:first-child { text-align: left; padding-left: 10px; }
+
+/* GRID */
+.guess-grid { display: flex; flex-direction: column; gap: 5px; }
+.guess-row {
+display: grid;
+grid-template-columns: 1.7fr 1fr 0.6fr 0.75fr 0.85fr 0.75fr 1fr;
+gap: 5px;
+}
+
+.cell {
+border-radius: 6px;
+padding: 9px 6px;
+text-align: center;
+font-size: 12px;
+font-weight: 600;
+min-height: 50px;
+display: flex;
+align-items: center;
+justify-content: center;
+line-height: 1.3;
+}
+.cell:first-child { text-align: left; justify-content: flex-start; padding-left: 10px; font-size: 12px; }
+.cell.empty   { background: #fff; border: 1.5px solid var(–border); color: transparent; }
+.cell.correct { background: var(–correct-bg); border: 1.5px solid var(–correct-border); color: var(–correct-text); }
+.cell.close   { background: var(–close-bg);   border: 1.5px solid var(–close-border);   color: var(–close-text); }
+.cell.wrong   { background: var(–wrong-bg);   border: 1.5px solid var(–wrong-border);   color: var(–wrong-text); }
+
+.arrow { font-size: 10px; margin-left: 3px; opacity: 0.65; }
+
+@keyframes reveal {
+from { opacity: 0; transform: scaleY(0.6); }
+to   { opacity: 1; transform: scaleY(1); }
+}
+.cell.anim { animation: reveal 0.28s ease forwards; }
+
+/* MODAL */
+.overlay {
+display: none; position: fixed; inset: 0;
+background: rgba(28,26,22,0.65);
+backdrop-filter: blur(6px);
+z-index: 300;
+align-items: center; justify-content: center;
+}
+.overlay.show { display: flex; }
+.modal {
+background: #fff;
+border: 2px solid var(–text);
+border-radius: 14px;
+padding: 36px 30px;
+max-width: 400px;
+width: 92%;
+text-align: center;
+box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
+}
+.m-icon { font-size: 46px; margin-bottom: 10px; }
+.modal h2 {
+font-family: ‘Bebas Neue’, sans-serif;
+font-size: clamp(1.4rem, 5vw, 2rem);
+letter-spacing: 4px;
+color: var(–text);
+margin-bottom: 6px;
+}
+.modal p { font-size: 14px; color: var(–text2); line-height: 1.6; }
+.answer-box {
+font-family: ‘DM Serif Display’, serif;
+font-size: 19px;
+color: var(–text);
+margin: 14px 0;
+padding: 12px;
+background: var(–bg);
+border-radius: 8px;
+border: 1.5px solid var(–border);
+}
+.m-stats { display: flex; justify-content: center; gap: 32px; margin: 14px 0 20px; }
+.s-num { font-family: ‘Bebas Neue’, sans-serif; font-size: 2.2rem; letter-spacing: 2px; color: var(–text); line-height: 1; }
+.s-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(–text2); }
+.m-btn {
+background: var(–text); color: #f7f4ee; border: none;
+border-radius: 8px; padding: 12px 20px;
+font-family: ‘DM Sans’, sans-serif;
+font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
+cursor: pointer; margin: 4px;
+}
+.m-btn:hover { background: #333; }
+.m-btn-close { background: transparent; color: var(–text2); border: 1.5px solid var(–border); }
+.m-btn-close:hover { background: var(–bg); }
+.modal-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
+
+::-webkit-scrollbar { width: 4px; }
+::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
+.bmc-bar { text-align: center; padding: 24px 16px 40px; border-top: 1px solid var(–border); margin-top: 10px; }
+.bmc-btn { display: inline-flex; align-items: center; gap: 8px; background: #FFDD00; color: #000; font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s; }
+.bmc-btn:hover { opacity: 0.85; }
+
+@media (max-width: 600px) {
+.col-heads, .guess-row { grid-template-columns: 1.4fr 0.9fr 0.55fr 0.6fr 0.7fr 0.6fr 0.85fr; }
+.cell, .ch { font-size: 9px; }
+.cell { min-height: 44px; padding: 6px 3px; }
+.cell:first-child { padding-left: 6px; }
+h1 { font-size: 2rem; }
+.tagline { display: none; }
+}
 </style>
+
 </head>
 <body>
+
 <header>
   <div class="header-left">
     <h1>DeChambeaurdle</h1>
@@ -125,6 +387,9 @@
     <div class="pip-row" id="pips"></div>
   </div>
 </header>
+
+<!-- SEARCH BAR — STICKY TOP -->
+
 <div class="input-bar">
   <div class="input-inner">
     <div class="search-wrap">
@@ -135,6 +400,7 @@
     <button id="guess-btn">Guess</button>
   </div>
 </div>
+
 <main>
   <details class="how-to">
     <summary>How to Play</summary>
@@ -142,16 +408,19 @@
       Guess the mystery professional golfer in <strong>8 attempts</strong>. Each guess reveals clues across 7 categories.<br><br>
       <span style="color:var(--correct-text);font-weight:700">Green</span> = exact &nbsp;·&nbsp;
       <span style="color:var(--close-text);font-weight:700">Yellow</span> = close (age ±3, rank ±15, turned pro ±2, majors ±2, same region) &nbsp;·&nbsp;
-      <span style="color:var(--wrong-text);font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or Past.
+      <span style="color:var(--wrong-text);font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or PGA Past.
     </div>
   </details>
+
   <div class="legend">
     <span class="legend-lbl">Key:</span>
     <span class="lchip lc-g">✓ Exact</span>
     <span class="lchip lc-y">~ Close</span>
     <span class="lchip lc-s">✗ Wrong</span>
   </div>
+
   <div class="msg-bar" id="msg"></div>
+
   <div class="col-heads">
     <div class="ch">Player</div>
     <div class="ch">Country</div>
@@ -161,11 +430,16 @@
     <div class="ch">Majors</div>
     <div class="ch">Tour</div>
   </div>
+
   <div class="guess-grid" id="grid"></div>
-  <div class="bmc-bar">
-    <a class="bmc-btn" href="https://buymeacoffee.com/dechambeaurdle" target="_blank" rel="noopener">☕ Buy me a coffee</a>
-  </div>
 </main>
+
+  <div class="bmc-bar">
+    <a class="bmc-btn" href="https://buymeacoffee.com/dechambeaurdle" target="_blank" rel="noopener">
+      ☕ Buy me a coffee
+    </a>
+  </div>
+
 <div class="overlay" id="overlay">
   <div class="modal">
     <div class="m-icon" id="m-icon">🏆</div>
@@ -176,6 +450,20 @@
       <div><div class="s-num" id="s-guesses">-</div><div class="s-lbl">Guesses</div></div>
       <div><div class="s-num" id="s-streak">0</div><div class="s-lbl">Streak</div></div>
     </div>
+    <!-- RAFFLE EMAIL CAPTURE -->
+    <div id="raffle-box" style="display:none; margin: 14px 0; padding: 14px; background: #f7f4ee; border-radius: 10px; border: 1.5px solid #d4cfc4;">
+      <p style="font-size:13px; font-weight:700; color:#1c1a16; margin-bottom:4px;">🎁 Win a pair of golf shoes!</p>
+      <p style="font-size:11px; color:#6b6459; margin-bottom:10px;">Enter your email for a free raffle entry. Draw at 100 players — <span id="raffle-count">?</span> entered so far!</p>
+      <div style="display:flex; gap:6px;">
+        <input type="email" id="raffle-email" placeholder="your@email.com"
+          style="flex:1; padding:9px 12px; border:2px solid #d4cfc4; border-radius:7px; font-family:'DM Sans',sans-serif; font-size:13px; outline:none;" />
+        <button id="raffle-submit-btn" onclick="submitRaffle()"
+          style="background:#1c1a16; color:#f7f4ee; border:none; border-radius:7px; padding:9px 14px; font-family:'DM Sans',sans-serif; font-size:12px; font-weight:600; cursor:pointer; white-space:nowrap;">
+          Enter ⛳
+        </button>
+      </div>
+      <p id="raffle-msg" style="font-size:11px; color:#065f46; margin-top:8px; display:none;"></p>
+    </div>
     <div class="modal-btns">
       <button class="m-btn" id="share-btn" onclick="shareResult()">📋 Share Result</button>
       <button class="m-btn" id="next-btn" onclick="newGame()" style="display:none">Next Player →</button>
@@ -183,158 +471,177 @@
     </div>
   </div>
 </div>
+
 <script>
+// OWGR ranks per ESPN, March 12 2026. Ages as of March 2026.
+// LIV rosters per confirmed 2025 season. "Past" = retired from major tours.
 const PLAYERS = [
-  { name:"Scottie Scheffler", nat:"🇺🇸 USA", region:"Americas", age:29, rank:1, pro:2018, majors:4, tour:"PGA" },
-  { name:"Rory McIlroy", nat:"🇬🇧 N.Ireland", region:"Europe", age:36, rank:2, pro:2007, majors:5, tour:"PGA" },
-  { name:"Justin Rose", nat:"🇬🇧 England", region:"Europe", age:44, rank:3, pro:1998, majors:1, tour:"PGA" },
-  { name:"Tommy Fleetwood", nat:"🇬🇧 England", region:"Europe", age:33, rank:4, pro:2010, majors:0, tour:"PGA" },
-  { name:"Chris Gotterup", nat:"🇺🇸 USA", region:"Americas", age:25, rank:5, pro:2022, majors:0, tour:"PGA" },
-  { name:"Russell Henley", nat:"🇺🇸 USA", region:"Americas", age:35, rank:6, pro:2012, majors:0, tour:"PGA" },
-  { name:"J.J. Spaun", nat:"🇺🇸 USA", region:"Americas", age:35, rank:7, pro:2012, majors:1, tour:"PGA" },
-  { name:"Robert MacIntyre", nat:"🇬🇧 Scotland", region:"Europe", age:28, rank:8, pro:2018, majors:0, tour:"PGA" },
-  { name:"Ben Griffin", nat:"🇺🇸 USA", region:"Americas", age:29, rank:9, pro:2021, majors:0, tour:"PGA" },
-  { name:"Xander Schauffele", nat:"🇺🇸 USA", region:"Americas", age:30, rank:10, pro:2015, majors:2, tour:"PGA" },
-  { name:"Hideki Matsuyama", nat:"🇯🇵 Japan", region:"Asia", age:32, rank:11, pro:2013, majors:1, tour:"PGA" },
-  { name:"Justin Thomas", nat:"🇺🇸 USA", region:"Americas", age:31, rank:12, pro:2013, majors:2, tour:"PGA" },
-  { name:"Harris English", nat:"🇺🇸 USA", region:"Americas", age:35, rank:13, pro:2011, majors:0, tour:"PGA" },
-  { name:"Sepp Straka", nat:"🇦🇹 Austria", region:"Europe", age:32, rank:14, pro:2017, majors:0, tour:"PGA" },
-  { name:"Viktor Hovland", nat:"🇳🇴 Norway", region:"Europe", age:27, rank:15, pro:2019, majors:0, tour:"PGA" },
-  { name:"Alex Noren", nat:"🇸🇪 Sweden", region:"Europe", age:42, rank:16, pro:2006, majors:0, tour:"PGA" },
-  { name:"Keegan Bradley", nat:"🇺🇸 USA", region:"Americas", age:38, rank:18, pro:2007, majors:1, tour:"PGA" },
-  { name:"Collin Morikawa", nat:"🇺🇸 USA", region:"Americas", age:27, rank:19, pro:2019, majors:2, tour:"PGA" },
-  { name:"Ludvig Aberg", nat:"🇸🇪 Sweden", region:"Europe", age:25, rank:20, pro:2023, majors:0, tour:"PGA" },
-  { name:"Cameron Young", nat:"🇺🇸 USA", region:"Americas", age:27, rank:21, pro:2021, majors:0, tour:"PGA" },
-  { name:"Maverick McNealy", nat:"🇺🇸 USA", region:"Americas", age:29, rank:22, pro:2018, majors:0, tour:"PGA" },
-  { name:"Matt Fitzpatrick", nat:"🇬🇧 England", region:"Europe", age:30, rank:23, pro:2014, majors:1, tour:"PGA" },
-  { name:"Ryan Gerard", nat:"🇺🇸 USA", region:"Americas", age:26, rank:24, pro:2022, majors:0, tour:"PGA" },
-  { name:"Si Woo Kim", nat:"🇰🇷 S.Korea", region:"Asia", age:29, rank:26, pro:2012, majors:0, tour:"PGA" },
-  { name:"Aaron Rai", nat:"🇬🇧 England", region:"Europe", age:30, rank:27, pro:2015, majors:0, tour:"PGA" },
-  { name:"Sam Burns", nat:"🇺🇸 USA", region:"Americas", age:28, rank:28, pro:2019, majors:0, tour:"PGA" },
-  { name:"Shane Lowry", nat:"🇮🇪 Ireland", region:"Europe", age:37, rank:29, pro:2009, majors:1, tour:"PGA" },
-  { name:"Patrick Cantlay", nat:"🇺🇸 USA", region:"Americas", age:32, rank:30, pro:2012, majors:0, tour:"PGA" },
-  { name:"Marco Penge", nat:"🇬🇧 England", region:"Europe", age:27, rank:31, pro:2019, majors:0, tour:"PGA" },
-  { name:"Corey Conners", nat:"🇨🇦 Canada", region:"Americas", age:33, rank:32, pro:2014, majors:0, tour:"PGA" },
-  { name:"Bryson DeChambeau", nat:"🇺🇸 USA", region:"Americas", age:31, rank:33, pro:2016, majors:2, tour:"LIV: Crushers" },
-  { name:"Jason Day", nat:"🇦🇺 Australia", region:"Oceania", age:37, rank:34, pro:2006, majors:1, tour:"PGA" },
-  { name:"Andrew Novak", nat:"🇺🇸 USA", region:"Americas", age:31, rank:35, pro:2016, majors:0, tour:"PGA" },
-  { name:"Matt McCarty", nat:"🇺🇸 USA", region:"Americas", age:27, rank:36, pro:2022, majors:0, tour:"PGA" },
-  { name:"Michael Brennan", nat:"🇺🇸 USA", region:"Americas", age:25, rank:37, pro:2022, majors:0, tour:"PGA" },
-  { name:"Kristoffer Reitan", nat:"🇳🇴 Norway", region:"Europe", age:24, rank:38, pro:2022, majors:0, tour:"PGA" },
-  { name:"Sam Stevens", nat:"🇺🇸 USA", region:"Americas", age:27, rank:39, pro:2022, majors:0, tour:"PGA" },
-  { name:"Rasmus Hojgaard", nat:"🇩🇰 Denmark", region:"Europe", age:24, rank:40, pro:2019, majors:0, tour:"PGA" },
-  { name:"Michael Kim", nat:"🇺🇸 USA", region:"Americas", age:31, rank:41, pro:2016, majors:0, tour:"PGA" },
-  { name:"Kurt Kitayama", nat:"🇺🇸 USA", region:"Americas", age:29, rank:42, pro:2019, majors:0, tour:"PGA" },
-  { name:"Michael Thorbjornsen", nat:"🇺🇸 USA", region:"Americas", age:24, rank:43, pro:2023, majors:0, tour:"PGA" },
-  { name:"Pierceson Coody", nat:"🇺🇸 USA", region:"Americas", age:25, rank:44, pro:2022, majors:0, tour:"PGA" },
-  { name:"Sami Valimaki", nat:"🇫🇮 Finland", region:"Europe", age:26, rank:45, pro:2019, majors:0, tour:"PGA" },
-  { name:"Brian Harman", nat:"🇺🇸 USA", region:"Americas", age:37, rank:46, pro:2011, majors:1, tour:"PGA" },
-  { name:"Max Greyserman", nat:"🇺🇸 USA", region:"Americas", age:27, rank:47, pro:2023, majors:0, tour:"PGA" },
-  { name:"Akshay Bhatia", nat:"🇺🇸 USA", region:"Americas", age:23, rank:48, pro:2021, majors:0, tour:"PGA" },
-  { name:"Ryan Fox", nat:"🇳🇿 N.Zealand", region:"Oceania", age:37, rank:49, pro:2011, majors:0, tour:"PGA" },
-  { name:"Nicolai Hojgaard", nat:"🇩🇰 Denmark", region:"Europe", age:24, rank:50, pro:2020, majors:0, tour:"PGA" },
-  { name:"Min Woo Lee", nat:"🇦🇺 Australia", region:"Oceania", age:26, rank:52, pro:2019, majors:0, tour:"PGA" },
-  { name:"Daniel Berger", nat:"🇺🇸 USA", region:"Americas", age:32, rank:53, pro:2014, majors:0, tour:"PGA" },
-  { name:"Jacob Bridgeman", nat:"🇺🇸 USA", region:"Americas", age:24, rank:55, pro:2022, majors:0, tour:"PGA" },
-  { name:"Wyndham Clark", nat:"🇺🇸 USA", region:"Americas", age:31, rank:56, pro:2017, majors:1, tour:"PGA" },
-  { name:"Nick Taylor", nat:"🇨🇦 Canada", region:"Americas", age:36, rank:58, pro:2012, majors:0, tour:"PGA" },
-  { name:"Taylor Pendrith", nat:"🇨🇦 Canada", region:"Americas", age:33, rank:60, pro:2021, majors:0, tour:"PGA" },
-  { name:"JT Poston", nat:"🇺🇸 USA", region:"Americas", age:30, rank:61, pro:2017, majors:0, tour:"PGA" },
-  { name:"Jake Knapp", nat:"🇺🇸 USA", region:"Americas", age:29, rank:62, pro:2019, majors:0, tour:"PGA" },
-  { name:"Thomas Detry", nat:"🇧🇪 Belgium", region:"Europe", age:31, rank:63, pro:2015, majors:0, tour:"PGA" },
-  { name:"Sungjae Im", nat:"🇰🇷 S.Korea", region:"Asia", age:26, rank:64, pro:2015, majors:0, tour:"PGA" },
-  { name:"Nico Echavarria", nat:"🇨🇴 Colombia", region:"Americas", age:32, rank:65, pro:2016, majors:0, tour:"PGA" },
-  { name:"Garrick Higgo", nat:"🇿🇦 S.Africa", region:"Africa", age:25, rank:69, pro:2019, majors:0, tour:"PGA" },
-  { name:"Adam Scott", nat:"🇦🇺 Australia", region:"Oceania", age:44, rank:70, pro:2000, majors:1, tour:"PGA" },
-  { name:"Billy Horschel", nat:"🇺🇸 USA", region:"Americas", age:37, rank:71, pro:2009, majors:0, tour:"PGA" },
-  { name:"Lucas Glover", nat:"🇺🇸 USA", region:"Americas", age:45, rank:72, pro:2001, majors:1, tour:"PGA" },
-  { name:"Rickie Fowler", nat:"🇺🇸 USA", region:"Americas", age:36, rank:75, pro:2009, majors:0, tour:"PGA" },
-  { name:"Ryo Hisatsune", nat:"🇯🇵 Japan", region:"Asia", age:23, rank:78, pro:2022, majors:0, tour:"PGA" },
-  { name:"Tom McKibbin", nat:"🇬🇧 N.Ireland", region:"Europe", age:22, rank:82, pro:2022, majors:0, tour:"LIV: Legion XIII" },
-  { name:"Denny McCarthy", nat:"🇺🇸 USA", region:"Americas", age:31, rank:83, pro:2014, majors:0, tour:"PGA" },
-  { name:"Jordan Spieth", nat:"🇺🇸 USA", region:"Americas", age:31, rank:89, pro:2012, majors:3, tour:"PGA" },
-  { name:"Sahith Theegala", nat:"🇺🇸 USA", region:"Americas", age:27, rank:92, pro:2021, majors:0, tour:"PGA" },
-  { name:"Chris Kirk", nat:"🇺🇸 USA", region:"Americas", age:39, rank:93, pro:2008, majors:0, tour:"PGA" },
-  { name:"Tom Hoge", nat:"🇺🇸 USA", region:"Americas", age:35, rank:96, pro:2013, majors:0, tour:"PGA" },
-  { name:"Thorbjorn Olesen", nat:"🇩🇰 Denmark", region:"Europe", age:34, rank:97, pro:2011, majors:0, tour:"PGA" },
-  { name:"Davis Riley", nat:"🇺🇸 USA", region:"Americas", age:28, rank:98, pro:2021, majors:0, tour:"PGA" },
-  { name:"Stephan Jaeger", nat:"🇩🇪 Germany", region:"Europe", age:35, rank:101, pro:2013, majors:0, tour:"PGA" },
-  { name:"Mackenzie Hughes", nat:"🇨🇦 Canada", region:"Americas", age:33, rank:104, pro:2014, majors:0, tour:"PGA" },
-  { name:"Tony Finau", nat:"🇺🇸 USA", region:"Americas", age:35, rank:105, pro:2007, majors:0, tour:"PGA" },
-  { name:"Byeong Hun An", nat:"🇰🇷 S.Korea", region:"Asia", age:32, rank:107, pro:2014, majors:0, tour:"PGA" },
-  { name:"Emiliano Grillo", nat:"🇦🇷 Argentina", region:"Americas", age:32, rank:110, pro:2015, majors:0, tour:"PGA" },
-  { name:"Davis Thompson", nat:"🇺🇸 USA", region:"Americas", age:25, rank:112, pro:2022, majors:0, tour:"PGA" },
-  { name:"Max Homa", nat:"🇺🇸 USA", region:"Americas", age:34, rank:120, pro:2013, majors:0, tour:"PGA" },
-  { name:"Christiaan Bezuidenhout", nat:"🇿🇦 S.Africa", region:"Africa", age:30, rank:88, pro:2014, majors:0, tour:"PGA" },
-  { name:"Brooks Koepka", nat:"🇺🇸 USA", region:"Americas", age:35, rank:170, pro:2012, majors:5, tour:"PGA" },
-  { name:"Dustin Johnson", nat:"🇺🇸 USA", region:"Americas", age:41, rank:200, pro:2007, majors:2, tour:"LIV: 4Aces" },
-  { name:"Thomas Pieters", nat:"🇧🇪 Belgium", region:"Europe", age:32, rank:210, pro:2013, majors:0, tour:"LIV: 4Aces" },
-  { name:"Patrick Reed", nat:"🇺🇸 USA", region:"Americas", age:34, rank:17, pro:2011, majors:1, tour:"LIV: 4Aces" },
-  { name:"Harold Varner III", nat:"🇺🇸 USA", region:"Americas", age:34, rank:350, pro:2014, majors:0, tour:"LIV: 4Aces" },
-  { name:"Martin Kaymer", nat:"🇩🇪 Germany", region:"Europe", age:40, rank:390, pro:2005, majors:2, tour:"LIV: Cleeks" },
-  { name:"Richard Bland", nat:"🇬🇧 England", region:"Europe", age:51, rank:450, pro:1996, majors:0, tour:"LIV: Cleeks" },
-  { name:"Adrian Meronk", nat:"🇵🇱 Poland", region:"Europe", age:31, rank:260, pro:2018, majors:0, tour:"LIV: Cleeks" },
-  { name:"Frederik Kjettrup", nat:"🇩🇰 Denmark", region:"Europe", age:24, rank:300, pro:2022, majors:0, tour:"LIV: Cleeks" },
-  { name:"Paul Casey", nat:"🇬🇧 England", region:"Europe", age:47, rank:280, pro:2001, majors:0, tour:"LIV: Crushers" },
-  { name:"Charles Howell III", nat:"🇺🇸 USA", region:"Americas", age:45, rank:400, pro:2001, majors:0, tour:"LIV: Crushers" },
-  { name:"Anirban Lahiri", nat:"🇮🇳 India", region:"Asia", age:37, rank:300, pro:2006, majors:0, tour:"LIV: Crushers" },
-  { name:"Sergio Garcia", nat:"🇪🇸 Spain", region:"Europe", age:45, rank:220, pro:1999, majors:1, tour:"LIV: Fireballs" },
-  { name:"Abraham Ancer", nat:"🇲🇽 Mexico", region:"Americas", age:33, rank:230, pro:2013, majors:0, tour:"LIV: Fireballs" },
-  { name:"David Puig", nat:"🇪🇸 Spain", region:"Europe", age:23, rank:87, pro:2022, majors:0, tour:"LIV: Fireballs" },
-  { name:"Luis Masaveu", nat:"🇪🇸 Spain", region:"Europe", age:22, rank:400, pro:2024, majors:0, tour:"LIV: Fireballs" },
-  { name:"Phil Mickelson", nat:"🇺🇸 USA", region:"Americas", age:55, rank:500, pro:1992, majors:6, tour:"LIV: HyFlyers" },
-  { name:"Brendan Steele", nat:"🇺🇸 USA", region:"Americas", age:42, rank:380, pro:2007, majors:0, tour:"LIV: HyFlyers" },
-  { name:"Cameron Tringale", nat:"🇺🇸 USA", region:"Americas", age:37, rank:400, pro:2010, majors:0, tour:"LIV: HyFlyers" },
-  { name:"Andy Ogletree", nat:"🇺🇸 USA", region:"Americas", age:27, rank:380, pro:2021, majors:0, tour:"LIV: HyFlyers" },
-  { name:"Kevin Na", nat:"🇺🇸 USA", region:"Americas", age:41, rank:450, pro:2001, majors:0, tour:"LIV: Iron Heads" },
-  { name:"Danny Lee", nat:"🇳🇿 N.Zealand", region:"Oceania", age:34, rank:420, pro:2009, majors:0, tour:"LIV: Iron Heads" },
-  { name:"Yubin Jang", nat:"🇰🇷 S.Korea", region:"Asia", age:24, rank:350, pro:2022, majors:0, tour:"LIV: Iron Heads" },
-  { name:"Jon Rahm", nat:"🇪🇸 Spain", region:"Europe", age:30, rank:67, pro:2016, majors:2, tour:"LIV: Legion XIII" },
-  { name:"Tyrrell Hatton", nat:"🇬🇧 England", region:"Europe", age:33, rank:25, pro:2013, majors:0, tour:"LIV: Legion XIII" },
-  { name:"Ian Poulter", nat:"🇬🇧 England", region:"Europe", age:49, rank:480, pro:1996, majors:0, tour:"LIV: Majesticks" },
-  { name:"Henrik Stenson", nat:"🇸🇪 Sweden", region:"Europe", age:49, rank:490, pro:2000, majors:1, tour:"LIV: Majesticks" },
-  { name:"Lee Westwood", nat:"🇬🇧 England", region:"Europe", age:51, rank:510, pro:1993, majors:0, tour:"LIV: Majesticks" },
-  { name:"Sam Horsfield", nat:"🇬🇧 England", region:"Europe", age:27, rank:330, pro:2019, majors:0, tour:"LIV: Majesticks" },
-  { name:"Bubba Watson", nat:"🇺🇸 USA", region:"Americas", age:46, rank:460, pro:2002, majors:2, tour:"LIV: RangeGoats" },
-  { name:"Matthew Wolff", nat:"🇺🇸 USA", region:"Americas", age:26, rank:360, pro:2019, majors:0, tour:"LIV: RangeGoats" },
-  { name:"Peter Uihlein", nat:"🇺🇸 USA", region:"Americas", age:35, rank:290, pro:2012, majors:0, tour:"LIV: RangeGoats" },
-  { name:"Ben Campbell", nat:"🇳🇿 N.Zealand", region:"Oceania", age:34, rank:350, pro:2014, majors:0, tour:"LIV: RangeGoats" },
-  { name:"Cameron Smith", nat:"🇦🇺 Australia", region:"Oceania", age:31, rank:240, pro:2015, majors:1, tour:"LIV: Ripper" },
-  { name:"Marc Leishman", nat:"🇦🇺 Australia", region:"Oceania", age:41, rank:270, pro:2007, majors:0, tour:"LIV: Ripper" },
-  { name:"Lucas Herbert", nat:"🇦🇺 Australia", region:"Oceania", age:29, rank:310, pro:2016, majors:0, tour:"LIV: Ripper" },
-  { name:"Elvis Smylie", nat:"🇦🇺 Australia", region:"Oceania", age:24, rank:77, pro:2024, majors:0, tour:"LIV: Ripper" },
-  { name:"Talor Gooch", nat:"🇺🇸 USA", region:"Americas", age:33, rank:250, pro:2015, majors:0, tour:"LIV: Smash" },
-  { name:"Jason Kokrak", nat:"🇺🇸 USA", region:"Americas", age:40, rank:400, pro:2011, majors:0, tour:"LIV: Smash" },
-  { name:"Graeme McDowell", nat:"🇬🇧 N.Ireland", region:"Europe", age:45, rank:470, pro:2001, majors:1, tour:"LIV: Smash" },
-  { name:"Louis Oosthuizen", nat:"🇿🇦 S.Africa", region:"Africa", age:42, rank:200, pro:2002, majors:1, tour:"LIV: Stinger" },
-  { name:"Dean Burmester", nat:"🇿🇦 S.Africa", region:"Africa", age:35, rank:190, pro:2011, majors:0, tour:"LIV: Stinger" },
-  { name:"Branden Grace", nat:"🇿🇦 S.Africa", region:"Africa", age:36, rank:340, pro:2008, majors:0, tour:"LIV: Stinger" },
-  { name:"Charl Schwartzel", nat:"🇿🇦 S.Africa", region:"Africa", age:41, rank:370, pro:2004, majors:1, tour:"LIV: Stinger" },
-  { name:"Joaquin Niemann", nat:"🇨🇱 Chile", region:"Americas", age:26, rank:180, pro:2018, majors:0, tour:"LIV: Torque" },
-  { name:"Sebastian Munoz", nat:"🇨🇴 Colombia", region:"Americas", age:32, rank:300, pro:2015, majors:0, tour:"LIV: Torque" },
-  { name:"Carlos Ortiz", nat:"🇲🇽 Mexico", region:"Americas", age:33, rank:320, pro:2014, majors:0, tour:"LIV: Torque" },
-  { name:"Mito Pereira", nat:"🇨🇱 Chile", region:"Americas", age:30, rank:280, pro:2017, majors:0, tour:"LIV: Torque" },
-  { name:"Tiger Woods", nat:"🇺🇸 USA", region:"Americas", age:50, rank:895, pro:1996, majors:15, tour:"Past" },
-  { name:"Ernie Els", nat:"🇿🇦 S.Africa", region:"Africa", age:55, rank:999, pro:1989, majors:4, tour:"Past" },
-  { name:"Vijay Singh", nat:"🇫🇯 Fiji", region:"Oceania", age:62, rank:999, pro:1982, majors:3, tour:"Past" },
-  { name:"Fred Couples", nat:"🇺🇸 USA", region:"Americas", age:65, rank:999, pro:1980, majors:1, tour:"Past" },
-  { name:"Davis Love III", nat:"🇺🇸 USA", region:"Americas", age:61, rank:999, pro:1985, majors:1, tour:"Past" },
-  { name:"Nick Faldo", nat:"🇬🇧 England", region:"Europe", age:68, rank:999, pro:1976, majors:6, tour:"Past" },
-  { name:"Greg Norman", nat:"🇦🇺 Australia", region:"Oceania", age:71, rank:999, pro:1976, majors:2, tour:"Past" },
-  { name:"Bernhard Langer", nat:"🇩🇪 Germany", region:"Europe", age:68, rank:999, pro:1972, majors:2, tour:"Past" },
-  { name:"Nick Price", nat:"🇿🇦 S.Africa", region:"Africa", age:68, rank:999, pro:1977, majors:3, tour:"Past" },
-  { name:"Tom Watson", nat:"🇺🇸 USA", region:"Americas", age:75, rank:999, pro:1971, majors:8, tour:"Past" },
-  { name:"Jack Nicklaus", nat:"🇺🇸 USA", region:"Americas", age:85, rank:999, pro:1961, majors:18, tour:"Past" },
-  { name:"Seve Ballesteros", nat:"🇪🇸 Spain", region:"Europe", age:66, rank:999, pro:1974, majors:5, tour:"Past" },
-  { name:"Lee Trevino", nat:"🇺🇸 USA", region:"Americas", age:85, rank:999, pro:1960, majors:6, tour:"Past" },
-  { name:"Gary Player", nat:"🇿🇦 S.Africa", region:"Africa", age:89, rank:999, pro:1953, majors:9, tour:"Past" },
-  { name:"Zach Johnson", nat:"🇺🇸 USA", region:"Americas", age:49, rank:400, pro:1998, majors:2, tour:"Past" },
-  { name:"Stewart Cink", nat:"🇺🇸 USA", region:"Americas", age:52, rank:450, pro:1995, majors:1, tour:"Past" },
-  { name:"Webb Simpson", nat:"🇺🇸 USA", region:"Americas", age:40, rank:430, pro:2008, majors:1, tour:"Past" },
-  { name:"Geoff Ogilvy", nat:"🇦🇺 Australia", region:"Oceania", age:48, rank:500, pro:1998, majors:1, tour:"Past" },
-  { name:"Luke Donald", nat:"🇬🇧 England", region:"Europe", age:47, rank:500, pro:1999, majors:0, tour:"Past" },
-  { name:"Brandt Snedeker", nat:"🇺🇸 USA", region:"Americas", age:44, rank:500, pro:2007, majors:0, tour:"Past" },
-  { name:"Francesco Molinari", nat:"🇮🇹 Italy", region:"Europe", age:42, rank:500, pro:2004, majors:1, tour:"Past" },
+  // ── PGA TOUR (OWGR top 100, March 12 2026) ──
+  { name:"Scottie Scheffler",        nat:"🇺🇸 USA",        region:"Americas", age:29, rank:1,   pro:2018, majors:4,  tour:"PGA" },
+  { name:"Rory McIlroy",             nat:"🇬🇧 N.Ireland",  region:"Europe",   age:36, rank:2,   pro:2007, majors:5,  tour:"PGA" },
+  { name:"Justin Rose",              nat:"🇬🇧 England",    region:"Europe",   age:44, rank:3,   pro:1998, majors:1,  tour:"PGA" },
+  { name:"Tommy Fleetwood",          nat:"🇬🇧 England",    region:"Europe",   age:33, rank:4,   pro:2010, majors:0,  tour:"PGA" },
+  { name:"Chris Gotterup",           nat:"🇺🇸 USA",        region:"Americas", age:25, rank:5,   pro:2022, majors:0,  tour:"PGA" },
+  { name:"Russell Henley",           nat:"🇺🇸 USA",        region:"Americas", age:35, rank:6,   pro:2012, majors:0,  tour:"PGA" },
+  { name:"J.J. Spaun",               nat:"🇺🇸 USA",        region:"Americas", age:35, rank:7,   pro:2012, majors:1,  tour:"PGA" },
+  { name:"Robert MacIntyre",         nat:"🇬🇧 Scotland",   region:"Europe",   age:28, rank:8,   pro:2018, majors:0,  tour:"PGA" },
+  { name:"Ben Griffin",              nat:"🇺🇸 USA",        region:"Americas", age:29, rank:9,   pro:2021, majors:0,  tour:"PGA" },
+  { name:"Xander Schauffele",        nat:"🇺🇸 USA",        region:"Americas", age:30, rank:10,  pro:2015, majors:2,  tour:"PGA" },
+  { name:"Hideki Matsuyama",         nat:"🇯🇵 Japan",      region:"Asia",     age:32, rank:11,  pro:2013, majors:1,  tour:"PGA" },
+  { name:"Justin Thomas",            nat:"🇺🇸 USA",        region:"Americas", age:31, rank:12,  pro:2013, majors:2,  tour:"PGA" },
+  { name:"Harris English",           nat:"🇺🇸 USA",        region:"Americas", age:35, rank:13,  pro:2011, majors:0,  tour:"PGA" },
+  { name:"Sepp Straka",              nat:"🇦🇹 Austria",    region:"Europe",   age:32, rank:14,  pro:2017, majors:0,  tour:"PGA" },
+  { name:"Viktor Hovland",           nat:"🇳🇴 Norway",     region:"Europe",   age:27, rank:15,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Alex Noren",               nat:"🇸🇪 Sweden",     region:"Europe",   age:42, rank:16,  pro:2006, majors:0,  tour:"PGA" },
+  { name:"Keegan Bradley",           nat:"🇺🇸 USA",        region:"Americas", age:38, rank:18,  pro:2007, majors:1,  tour:"PGA" },
+  { name:"Collin Morikawa",          nat:"🇺🇸 USA",        region:"Americas", age:27, rank:19,  pro:2019, majors:2,  tour:"PGA" },
+  { name:"Ludvig Aberg",             nat:"🇸🇪 Sweden",     region:"Europe",   age:25, rank:20,  pro:2023, majors:0,  tour:"PGA" },
+  { name:"Cameron Young",            nat:"🇺🇸 USA",        region:"Americas", age:27, rank:21,  pro:2021, majors:0,  tour:"PGA" },
+  { name:"Maverick McNealy",         nat:"🇺🇸 USA",        region:"Americas", age:29, rank:22,  pro:2018, majors:0,  tour:"PGA" },
+  { name:"Matt Fitzpatrick",         nat:"🇬🇧 England",    region:"Europe",   age:30, rank:23,  pro:2014, majors:1,  tour:"PGA" },
+  { name:"Ryan Gerard",              nat:"🇺🇸 USA",        region:"Americas", age:26, rank:24,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Si Woo Kim",               nat:"🇰🇷 S.Korea",    region:"Asia",     age:29, rank:26,  pro:2012, majors:0,  tour:"PGA" },
+  { name:"Aaron Rai",                nat:"🇬🇧 England",    region:"Europe",   age:30, rank:27,  pro:2015, majors:0,  tour:"PGA" },
+  { name:"Sam Burns",                nat:"🇺🇸 USA",        region:"Americas", age:28, rank:28,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Shane Lowry",              nat:"🇮🇪 Ireland",    region:"Europe",   age:37, rank:29,  pro:2009, majors:1,  tour:"PGA" },
+  { name:"Patrick Cantlay",          nat:"🇺🇸 USA",        region:"Americas", age:32, rank:30,  pro:2012, majors:0,  tour:"PGA" },
+  { name:"Marco Penge",              nat:"🇬🇧 England",    region:"Europe",   age:27, rank:31,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Corey Conners",            nat:"🇨🇦 Canada",     region:"Americas", age:33, rank:32,  pro:2014, majors:0,  tour:"PGA" },
+  { name:"Bryson DeChambeau",        nat:"🇺🇸 USA",        region:"Americas", age:31, rank:33,  pro:2016, majors:2,  tour:"LIV: Crushers" },
+  { name:"Jason Day",                nat:"🇦🇺 Australia",  region:"Oceania",  age:37, rank:34,  pro:2006, majors:1,  tour:"PGA" },
+  { name:"Andrew Novak",             nat:"🇺🇸 USA",        region:"Americas", age:31, rank:35,  pro:2016, majors:0,  tour:"PGA" },
+  { name:"Matt McCarty",             nat:"🇺🇸 USA",        region:"Americas", age:27, rank:36,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Michael Brennan",          nat:"🇺🇸 USA",        region:"Americas", age:25, rank:37,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Kristoffer Reitan",        nat:"🇳🇴 Norway",     region:"Europe",   age:24, rank:38,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Sam Stevens",              nat:"🇺🇸 USA",        region:"Americas", age:27, rank:39,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Rasmus Hojgaard",          nat:"🇩🇰 Denmark",    region:"Europe",   age:24, rank:40,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Michael Kim",              nat:"🇺🇸 USA",        region:"Americas", age:31, rank:41,  pro:2016, majors:0,  tour:"PGA" },
+  { name:"Kurt Kitayama",            nat:"🇺🇸 USA",        region:"Americas", age:29, rank:42,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Michael Thorbjornsen",     nat:"🇺🇸 USA",        region:"Americas", age:24, rank:43,  pro:2023, majors:0,  tour:"PGA" },
+  { name:"Pierceson Coody",          nat:"🇺🇸 USA",        region:"Americas", age:25, rank:44,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Sami Valimaki",            nat:"🇫🇮 Finland",    region:"Europe",   age:26, rank:45,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Brian Harman",             nat:"🇺🇸 USA",        region:"Americas", age:37, rank:46,  pro:2011, majors:1,  tour:"PGA" },
+  { name:"Max Greyserman",           nat:"🇺🇸 USA",        region:"Americas", age:27, rank:47,  pro:2023, majors:0,  tour:"PGA" },
+  { name:"Akshay Bhatia",            nat:"🇺🇸 USA",        region:"Americas", age:23, rank:48,  pro:2021, majors:0,  tour:"PGA" },
+  { name:"Ryan Fox",                 nat:"🇳🇿 N.Zealand",  region:"Oceania",  age:37, rank:49,  pro:2011, majors:0,  tour:"PGA" },
+  { name:"Nicolai Hojgaard",         nat:"🇩🇰 Denmark",    region:"Europe",   age:24, rank:50,  pro:2020, majors:0,  tour:"PGA" },
+  { name:"Min Woo Lee",              nat:"🇦🇺 Australia",  region:"Oceania",  age:26, rank:52,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Daniel Berger",            nat:"🇺🇸 USA",        region:"Americas", age:32, rank:53,  pro:2014, majors:0,  tour:"PGA" },
+  { name:"Jacob Bridgeman",          nat:"🇺🇸 USA",        region:"Americas", age:24, rank:55,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Wyndham Clark",            nat:"🇺🇸 USA",        region:"Americas", age:31, rank:56,  pro:2017, majors:1,  tour:"PGA" },
+  { name:"Nick Taylor",              nat:"🇨🇦 Canada",     region:"Americas", age:36, rank:58,  pro:2012, majors:0,  tour:"PGA" },
+  { name:"Taylor Pendrith",          nat:"🇨🇦 Canada",     region:"Americas", age:33, rank:60,  pro:2021, majors:0,  tour:"PGA" },
+  { name:"JT Poston",                nat:"🇺🇸 USA",        region:"Americas", age:30, rank:61,  pro:2017, majors:0,  tour:"PGA" },
+  { name:"Jake Knapp",               nat:"🇺🇸 USA",        region:"Americas", age:29, rank:62,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Thomas Detry",             nat:"🇧🇪 Belgium",    region:"Europe",   age:31, rank:63,  pro:2015, majors:0,  tour:"PGA" },
+  { name:"Sungjae Im",               nat:"🇰🇷 S.Korea",    region:"Asia",     age:26, rank:64,  pro:2015, majors:0,  tour:"PGA" },
+  { name:"Nico Echavarria",          nat:"🇨🇴 Colombia",   region:"Americas", age:32, rank:65,  pro:2016, majors:0,  tour:"PGA" },
+  { name:"Garrick Higgo",            nat:"🇿🇦 S.Africa",   region:"Africa",   age:25, rank:69,  pro:2019, majors:0,  tour:"PGA" },
+  { name:"Adam Scott",               nat:"🇦🇺 Australia",  region:"Oceania",  age:44, rank:70,  pro:2000, majors:1,  tour:"PGA" },
+  { name:"Billy Horschel",           nat:"🇺🇸 USA",        region:"Americas", age:37, rank:71,  pro:2009, majors:0,  tour:"PGA" },
+  { name:"Lucas Glover",             nat:"🇺🇸 USA",        region:"Americas", age:45, rank:72,  pro:2001, majors:1,  tour:"PGA" },
+  { name:"Rickie Fowler",            nat:"🇺🇸 USA",        region:"Americas", age:36, rank:75,  pro:2009, majors:0,  tour:"PGA" },
+  { name:"Ryo Hisatsune",            nat:"🇯🇵 Japan",      region:"Asia",     age:23, rank:78,  pro:2022, majors:0,  tour:"PGA" },
+  { name:"Tom McKibbin",             nat:"🇬🇧 N.Ireland",  region:"Europe",   age:22, rank:82,  pro:2022, majors:0,  tour:"LIV: Legion XIII" },
+  { name:"Denny McCarthy",           nat:"🇺🇸 USA",        region:"Americas", age:31, rank:83,  pro:2014, majors:0,  tour:"PGA" },
+  { name:"Jordan Spieth",            nat:"🇺🇸 USA",        region:"Americas", age:31, rank:89,  pro:2012, majors:3,  tour:"PGA" },
+  { name:"Sahith Theegala",          nat:"🇺🇸 USA",        region:"Americas", age:27, rank:92,  pro:2021, majors:0,  tour:"PGA" },
+  { name:"Chris Kirk",               nat:"🇺🇸 USA",        region:"Americas", age:39, rank:93,  pro:2008, majors:0,  tour:"PGA" },
+  { name:"Tom Hoge",                 nat:"🇺🇸 USA",        region:"Americas", age:35, rank:96,  pro:2013, majors:0,  tour:"PGA" },
+  { name:"Thorbjorn Olesen",         nat:"🇩🇰 Denmark",    region:"Europe",   age:34, rank:97,  pro:2011, majors:0,  tour:"PGA" },
+  { name:"Davis Riley",              nat:"🇺🇸 USA",        region:"Americas", age:28, rank:98,  pro:2021, majors:0,  tour:"PGA" },
+  { name:"Stephan Jaeger",           nat:"🇩🇪 Germany",    region:"Europe",   age:35, rank:101, pro:2013, majors:0,  tour:"PGA" },
+  { name:"Mackenzie Hughes",         nat:"🇨🇦 Canada",     region:"Americas", age:33, rank:104, pro:2014, majors:0,  tour:"PGA" },
+  { name:"Tony Finau",               nat:"🇺🇸 USA",        region:"Americas", age:35, rank:105, pro:2007, majors:0,  tour:"PGA" },
+  { name:"Byeong Hun An",            nat:"🇰🇷 S.Korea",    region:"Asia",     age:32, rank:107, pro:2014, majors:0,  tour:"PGA" },
+  { name:"Emiliano Grillo",          nat:"🇦🇷 Argentina",  region:"Americas", age:32, rank:110, pro:2015, majors:0,  tour:"PGA" },
+  { name:"Davis Thompson",           nat:"🇺🇸 USA",        region:"Americas", age:25, rank:112, pro:2022, majors:0,  tour:"PGA" },
+  { name:"Max Homa",                 nat:"🇺🇸 USA",        region:"Americas", age:34, rank:120, pro:2013, majors:0,  tour:"PGA" },
+  { name:"Christiaan Bezuidenhout",  nat:"🇿🇦 S.Africa",   region:"Africa",   age:30, rank:88,  pro:2014, majors:0,  tour:"PGA" },
+  // ── LIV GOLF 2025 ──
+  // 4Aces GC
+  { name:"Dustin Johnson",           nat:"🇺🇸 USA",        region:"Americas", age:41, rank:200, pro:2007, majors:2,  tour:"LIV: 4Aces" },
+  { name:"Thomas Pieters",           nat:"🇧🇪 Belgium",    region:"Europe",   age:32, rank:210, pro:2013, majors:0,  tour:"LIV: 4Aces" },
+  { name:"Patrick Reed",             nat:"🇺🇸 USA",        region:"Americas", age:34, rank:17,  pro:2011, majors:1,  tour:"LIV: 4Aces" },
+  { name:"Harold Varner III",        nat:"🇺🇸 USA",        region:"Americas", age:34, rank:350, pro:2014, majors:0,  tour:"LIV: 4Aces" },
+  // Cleeks GC
+  { name:"Martin Kaymer",            nat:"🇩🇪 Germany",    region:"Europe",   age:40, rank:390, pro:2005, majors:2,  tour:"LIV: Cleeks" },
+  { name:"Richard Bland",            nat:"🇬🇧 England",    region:"Europe",   age:51, rank:450, pro:1996, majors:0,  tour:"LIV: Cleeks" },
+  { name:"Adrian Meronk",            nat:"🇵🇱 Poland",     region:"Europe",   age:31, rank:260, pro:2018, majors:0,  tour:"LIV: Cleeks" },
+  { name:"Frederik Kjettrup",        nat:"🇩🇰 Denmark",    region:"Europe",   age:24, rank:300, pro:2022, majors:0,  tour:"LIV: Cleeks" },
+  // Crushers GC
+  { name:"Paul Casey",               nat:"🇬🇧 England",    region:"Europe",   age:47, rank:280, pro:2001, majors:0,  tour:"LIV: Crushers" },
+  { name:"Charles Howell III",       nat:"🇺🇸 USA",        region:"Americas", age:45, rank:400, pro:2001, majors:0,  tour:"LIV: Crushers" },
+  { name:"Anirban Lahiri",           nat:"🇮🇳 India",      region:"Asia",     age:37, rank:300, pro:2006, majors:0,  tour:"LIV: Crushers" },
+  // Fireballs GC
+  { name:"Sergio Garcia",            nat:"🇪🇸 Spain",      region:"Europe",   age:45, rank:220, pro:1999, majors:1,  tour:"LIV: Fireballs" },
+  { name:"Abraham Ancer",            nat:"🇲🇽 Mexico",     region:"Americas", age:33, rank:230, pro:2013, majors:0,  tour:"LIV: Fireballs" },
+  { name:"David Puig",               nat:"🇪🇸 Spain",      region:"Europe",   age:23, rank:87,  pro:2022, majors:0,  tour:"LIV: Fireballs" },
+  { name:"Luis Masaveu",             nat:"🇪🇸 Spain",      region:"Europe",   age:22, rank:400, pro:2024, majors:0,  tour:"LIV: Fireballs" },
+  // HyFlyers GC
+  { name:"Phil Mickelson",           nat:"🇺🇸 USA",        region:"Americas", age:55, rank:500, pro:1992, majors:6,  tour:"LIV: HyFlyers" },
+  { name:"Brendan Steele",           nat:"🇺🇸 USA",        region:"Americas", age:42, rank:380, pro:2007, majors:0,  tour:"LIV: HyFlyers" },
+  { name:"Cameron Tringale",         nat:"🇺🇸 USA",        region:"Americas", age:37, rank:400, pro:2010, majors:0,  tour:"LIV: HyFlyers" },
+  { name:"Andy Ogletree",            nat:"🇺🇸 USA",        region:"Americas", age:27, rank:380, pro:2021, majors:0,  tour:"LIV: HyFlyers" },
+  // Iron Heads GC
+  { name:"Kevin Na",                 nat:"🇺🇸 USA",        region:"Americas", age:41, rank:450, pro:2001, majors:0,  tour:"LIV: Iron Heads" },
+  { name:"Danny Lee",                nat:"🇳🇿 N.Zealand",  region:"Oceania",  age:34, rank:420, pro:2009, majors:0,  tour:"LIV: Iron Heads" },
+  { name:"Yubin Jang",               nat:"🇰🇷 S.Korea",    region:"Asia",     age:24, rank:350, pro:2022, majors:0,  tour:"LIV: Iron Heads" },
+  // Legion XIII
+  { name:"Jon Rahm",                 nat:"🇪🇸 Spain",      region:"Europe",   age:30, rank:67,  pro:2016, majors:2,  tour:"LIV: Legion XIII" },
+  { name:"Tyrrell Hatton",           nat:"🇬🇧 England",    region:"Europe",   age:33, rank:25,  pro:2013, majors:0,  tour:"LIV: Legion XIII" },
+  // Majesticks GC
+  { name:"Ian Poulter",              nat:"🇬🇧 England",    region:"Europe",   age:49, rank:480, pro:1996, majors:0,  tour:"LIV: Majesticks" },
+  { name:"Henrik Stenson",           nat:"🇸🇪 Sweden",     region:"Europe",   age:49, rank:490, pro:2000, majors:1,  tour:"LIV: Majesticks" },
+  { name:"Lee Westwood",             nat:"🇬🇧 England",    region:"Europe",   age:51, rank:510, pro:1993, majors:0,  tour:"LIV: Majesticks" },
+  { name:"Sam Horsfield",            nat:"🇬🇧 England",    region:"Europe",   age:27, rank:330, pro:2019, majors:0,  tour:"LIV: Majesticks" },
+  // RangeGoats GC
+  { name:"Bubba Watson",             nat:"🇺🇸 USA",        region:"Americas", age:46, rank:460, pro:2002, majors:2,  tour:"LIV: RangeGoats" },
+  { name:"Matthew Wolff",            nat:"🇺🇸 USA",        region:"Americas", age:26, rank:360, pro:2019, majors:0,  tour:"LIV: RangeGoats" },
+  { name:"Peter Uihlein",            nat:"🇺🇸 USA",        region:"Americas", age:35, rank:290, pro:2012, majors:0,  tour:"LIV: RangeGoats" },
+  { name:"Ben Campbell",             nat:"🇳🇿 N.Zealand",  region:"Oceania",  age:34, rank:350, pro:2014, majors:0,  tour:"LIV: RangeGoats" },
+  // Ripper GC
+  { name:"Cameron Smith",            nat:"🇦🇺 Australia",  region:"Oceania",  age:31, rank:240, pro:2015, majors:1,  tour:"LIV: Ripper" },
+  { name:"Marc Leishman",            nat:"🇦🇺 Australia",  region:"Oceania",  age:41, rank:270, pro:2007, majors:0,  tour:"LIV: Ripper" },
+  { name:"Lucas Herbert",            nat:"🇦🇺 Australia",  region:"Oceania",  age:29, rank:310, pro:2016, majors:0,  tour:"LIV: Ripper" },
+  { name:"Elvis Smylie",             nat:"🇦🇺 Australia",  region:"Oceania",  age:24, rank:77,  pro:2024, majors:0,  tour:"LIV: Ripper" },
+  // Smash GC
+  { name:"Brooks Koepka",            nat:"🇺🇸 USA",        region:"Americas", age:35, rank:170, pro:2012, majors:5,  tour:"PGA" },
+  { name:"Talor Gooch",              nat:"🇺🇸 USA",        region:"Americas", age:33, rank:250, pro:2015, majors:0,  tour:"LIV: Smash" },
+  { name:"Jason Kokrak",             nat:"🇺🇸 USA",        region:"Americas", age:40, rank:400, pro:2011, majors:0,  tour:"LIV: Smash" },
+  { name:"Graeme McDowell",          nat:"🇬🇧 N.Ireland",  region:"Europe",   age:45, rank:470, pro:2001, majors:1,  tour:"LIV: Smash" },
+  // Stinger GC
+  { name:"Louis Oosthuizen",         nat:"🇿🇦 S.Africa",   region:"Africa",   age:42, rank:200, pro:2002, majors:1,  tour:"LIV: Stinger" },
+  { name:"Dean Burmester",           nat:"🇿🇦 S.Africa",   region:"Africa",   age:35, rank:190, pro:2011, majors:0,  tour:"LIV: Stinger" },
+  { name:"Branden Grace",            nat:"🇿🇦 S.Africa",   region:"Africa",   age:36, rank:340, pro:2008, majors:0,  tour:"LIV: Stinger" },
+  { name:"Charl Schwartzel",         nat:"🇿🇦 S.Africa",   region:"Africa",   age:41, rank:370, pro:2004, majors:1,  tour:"LIV: Stinger" },
+  // Torque GC
+  { name:"Joaquin Niemann",          nat:"🇨🇱 Chile",      region:"Americas", age:26, rank:180, pro:2018, majors:0,  tour:"LIV: Torque" },
+  { name:"Sebastian Munoz",          nat:"🇨🇴 Colombia",   region:"Americas", age:32, rank:300, pro:2015, majors:0,  tour:"LIV: Torque" },
+  { name:"Carlos Ortiz",             nat:"🇲🇽 Mexico",     region:"Americas", age:33, rank:320, pro:2014, majors:0,  tour:"LIV: Torque" },
+  { name:"Mito Pereira",             nat:"🇨🇱 Chile",      region:"Americas", age:30, rank:280, pro:2017, majors:0,  tour:"LIV: Torque" },
+  // ── PGA PAST ──
+  { name:"Tiger Woods",              nat:"🇺🇸 USA",        region:"Americas", age:50, rank:895, pro:1996, majors:15, tour:"Past" },
+  { name:"Ernie Els",                nat:"🇿🇦 S.Africa",   region:"Africa",   age:55, rank:999, pro:1989, majors:4,  tour:"Past" },
+  { name:"Vijay Singh",              nat:"🇫🇯 Fiji",       region:"Oceania",  age:62, rank:999, pro:1982, majors:3,  tour:"Past" },
+  { name:"Fred Couples",             nat:"🇺🇸 USA",        region:"Americas", age:65, rank:999, pro:1980, majors:1,  tour:"Past" },
+  { name:"Davis Love III",           nat:"🇺🇸 USA",        region:"Americas", age:61, rank:999, pro:1985, majors:1,  tour:"Past" },
+  { name:"Nick Faldo",               nat:"🇬🇧 England",    region:"Europe",   age:68, rank:999, pro:1976, majors:6,  tour:"Past" },
+  { name:"Greg Norman",              nat:"🇦🇺 Australia",  region:"Oceania",  age:71, rank:999, pro:1976, majors:2,  tour:"Past" },
+  { name:"Bernhard Langer",          nat:"🇩🇪 Germany",    region:"Europe",   age:68, rank:999, pro:1972, majors:2,  tour:"Past" },
+  { name:"Nick Price",               nat:"🇿🇦 S.Africa",   region:"Africa",   age:68, rank:999, pro:1977, majors:3,  tour:"Past" },
+  { name:"Tom Watson",               nat:"🇺🇸 USA",        region:"Americas", age:75, rank:999, pro:1971, majors:8,  tour:"Past" },
+  { name:"Jack Nicklaus",            nat:"🇺🇸 USA",        region:"Americas", age:85, rank:999, pro:1961, majors:18, tour:"Past" },
+  { name:"Seve Ballesteros",         nat:"🇪🇸 Spain",      region:"Europe",   age:66, rank:999, pro:1974, majors:5,  tour:"Past" },
+  { name:"Lee Trevino",              nat:"🇺🇸 USA",        region:"Americas", age:85, rank:999, pro:1960, majors:6,  tour:"Past" },
+  { name:"Gary Player",              nat:"🇿🇦 S.Africa",   region:"Africa",   age:89, rank:999, pro:1953, majors:9,  tour:"Past" },
+  { name:"Zach Johnson",             nat:"🇺🇸 USA",        region:"Americas", age:49, rank:400, pro:1998, majors:2,  tour:"Past" },
+  { name:"Stewart Cink",             nat:"🇺🇸 USA",        region:"Americas", age:52, rank:450, pro:1995, majors:1,  tour:"Past" },
+  { name:"Webb Simpson",             nat:"🇺🇸 USA",        region:"Americas", age:40, rank:430, pro:2008, majors:1,  tour:"Past" },
+  { name:"Geoff Ogilvy",             nat:"🇦🇺 Australia",  region:"Oceania",  age:48, rank:500, pro:1998, majors:1,  tour:"Past" },
+  { name:"Luke Donald",              nat:"🇬🇧 England",    region:"Europe",   age:47, rank:500, pro:1999, majors:0,  tour:"Past" },
+  { name:"Brandt Snedeker",          nat:"🇺🇸 USA",        region:"Americas", age:44, rank:500, pro:2007, majors:0,  tour:"Past" },
+  { name:"Francesco Molinari",       nat:"🇮🇹 Italy",      region:"Europe",   age:42, rank:500, pro:2004, majors:1,  tour:"Past" },
 ];
 
 const MAX = 8;
@@ -345,139 +652,384 @@ function setMode(newMode) {
   document.getElementById('btn-daily').classList.toggle('active', newMode === 'daily');
   document.getElementById('btn-shuffle').classList.toggle('active', newMode === 'shuffle');
   document.getElementById('tagline').textContent = newMode === 'daily' ? 'Daily golfer puzzle' : 'Shuffle mode';
-  if (newMode === 'daily') { initDailyGame(); } else { initShuffleGame(); }
+  if (newMode === 'daily') {
+    initDailyGame();
+  } else {
+    initShuffleGame();
+  }
 }
+
 function getDailyIndex() {
   const epoch = new Date('2025-01-01');
   const now = new Date();
-  return Math.floor((now - epoch) / 86400000) % PLAYERS.length;
+  const diff = Math.floor((now - epoch) / 86400000);
+  return diff % PLAYERS.length;
 }
+
 function getTodayKey() {
   const d = new Date();
   return `dcbaurdle_${d.getFullYear()}_${d.getMonth()}_${d.getDate()}`;
 }
+
 function initDailyGame() {
   todayKey = getTodayKey();
   target = PLAYERS[getDailyIndex()];
-  guesses = []; gameOver = false;
+  guesses = [];
+  gameOver = false;
+
   try {
     const saved = JSON.parse(localStorage.getItem(todayKey) || 'null');
     if (saved) {
-      saved.guesses.forEach(name => { const p = PLAYERS.find(pl => pl.name === name); if (p) guesses.push({ player: p }); });
+      saved.guesses.forEach(name => {
+        const p = PLAYERS.find(pl => pl.name === name);
+        if (p) guesses.push({ player: p });
+      });
       gameOver = saved.gameOver;
     }
   } catch(e) {}
+
   resetUI();
-  if (gameOver) { const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name; setTimeout(() => showModal(won, won ? getWinTitle() : 'Out of Bounds', true), 300); }
+  if (gameOver) {
+    const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name;
+    setTimeout(() => showModal(won, won ? getWinTitle() : 'Out of Bounds', true), 300);
+  }
 }
+
 function initShuffleGame() {
-  let idx; do { idx = Math.floor(Math.random() * PLAYERS.length); } while (PLAYERS[idx] === target && PLAYERS.length > 1);
-  target = PLAYERS[idx]; guesses = []; gameOver = false; resetUI();
+  // Pick a random player that isn't the last target
+  let idx;
+  do { idx = Math.floor(Math.random() * PLAYERS.length); }
+  while (PLAYERS[idx] === target && PLAYERS.length > 1);
+  target = PLAYERS[idx];
+  guesses = [];
+  gameOver = false;
+  resetUI();
 }
+
 function initGame() { setMode('daily'); }
+
 function resetUI() {
-  renderGrid(); renderPips(); setMsg('');
+  renderGrid();
+  renderPips();
+  setMsg('');
   const inp = document.getElementById('player-input');
-  inp.value = ''; inp.disabled = gameOver;
+  inp.value = '';
+  inp.disabled = gameOver;
   document.getElementById('guess-btn').disabled = gameOver;
   document.getElementById('overlay').classList.remove('show');
   document.getElementById('suggestions').classList.remove('show');
 }
+
 function getWinTitle() {
-  return ['Hole in One! 🎯','Eagle!','Birdie!','Par.','Bogey…','Double Bogey','Triple Bogey','Made the Cut…'][guesses.length - 1] || 'Made the Cut';
+  const titles = ['Hole in One! 🎯','Eagle!','Birdie!','Par.','Bogey…','Double Bogey','Triple Bogey','Made the Cut…'];
+  return titles[guesses.length - 1] || 'Made the Cut';
 }
+
 function saveState() {
   if (mode !== 'daily') return;
-  localStorage.setItem(todayKey, JSON.stringify({ guesses: guesses.map(g => g.player.name), gameOver }));
+  localStorage.setItem(todayKey, JSON.stringify({
+    guesses: guesses.map(g => g.player.name),
+    gameOver
+  }));
 }
-function newGame() { document.getElementById('overlay').classList.remove('show'); if (mode === 'shuffle') initShuffleGame(); }
+
+function newGame() {
+  document.getElementById('overlay').classList.remove('show');
+  if (mode === 'shuffle') initShuffleGame();
+}
+
 function renderPips() {
-  const row = document.getElementById('pips'); row.innerHTML = '';
-  for (let i = 0; i < MAX; i++) { const p = document.createElement('div'); p.className = 'pip'; if (i < guesses.length) p.classList.add(guesses[i].player.name === target.name ? 'won' : 'used'); row.appendChild(p); }
-}
-function renderGrid() {
-  const grid = document.getElementById('grid'); grid.innerHTML = '';
+  const row = document.getElementById('pips');
+  row.innerHTML = '';
   for (let i = 0; i < MAX; i++) {
-    const row = document.createElement('div'); row.className = 'guess-row';
-    if (i < guesses.length) { makeCells(guesses[i].player).forEach((cell, ci) => { cell.classList.add('anim'); cell.style.animationDelay = (ci * 55) + 'ms'; row.appendChild(cell); }); }
-    else { for (let j = 0; j < 7; j++) { const c = document.createElement('div'); c.className = 'cell empty'; row.appendChild(c); } }
+    const p = document.createElement('div');
+    p.className = 'pip';
+    if (i < guesses.length) p.classList.add(guesses[i].player.name === target.name ? 'won' : 'used');
+    row.appendChild(p);
+  }
+}
+
+function renderGrid() {
+  const grid = document.getElementById('grid');
+  grid.innerHTML = '';
+  for (let i = 0; i < MAX; i++) {
+    const row = document.createElement('div');
+    row.className = 'guess-row';
+    if (i < guesses.length) {
+      makeCells(guesses[i].player).forEach((cell, ci) => {
+        cell.classList.add('anim');
+        cell.style.animationDelay = (ci * 55) + 'ms';
+        row.appendChild(cell);
+      });
+    } else {
+      for (let j = 0; j < 6; j++) {
+        const c = document.createElement('div');
+        c.className = 'cell empty';
+        row.appendChild(c);
+      }
+    }
     grid.appendChild(row);
   }
 }
-function gradeNum(val, tgt, close) { if (val === tgt) return 'correct'; return Math.abs(val - tgt) <= close ? 'close' : 'wrong'; }
+
+function gradeNum(val, tgt, close) {
+  if (val === tgt) return 'correct';
+  return Math.abs(val - tgt) <= close ? 'close' : 'wrong';
+}
+
 function makeCells(p) {
-  const t = target; const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
-  function tourGrade(a, b) { if (a === b) return 'correct'; const cat = x => x.startsWith('LIV') ? 'LIV' : x; return cat(a) === cat(b) ? 'close' : 'wrong'; }
-  function tourDisplay(tour) { if (tour === 'PGA') return 'PGA'; if (tour === 'Past') return 'Past'; return tour.replace('LIV: ', ''); }
+  const t = target;
+  const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
+
+  // Tour: exact match = correct, same category (PGA/LIV/Past) = close, different = wrong
+  function tourGrade(a, b) {
+    if (a === b) return 'correct';
+    const cat = x => x.startsWith('LIV') ? 'LIV' : x;
+    return cat(a) === cat(b) ? 'close' : 'wrong';
+  }
+
+  // Display tour — shorten LIV team name for cell
+  function tourDisplay(tour) {
+    if (tour === 'PGA') return 'PGA';
+    if (tour === 'Past') return 'Past';
+    return tour.replace('LIV: ', ''); // just show team name
+  }
+
   const defs = [
-    { display: p.name, result: p.name === t.name ? 'correct' : 'wrong', arrow: null },
-    { display: p.nat, result: p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong', arrow: null },
+    { display: p.name,    result: p.name === t.name ? 'correct' : 'wrong', arrow: null },
+    { display: p.nat,     result: p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong', arrow: null },
     { display: String(p.age), result: gradeNum(p.age, t.age, 3), arrow: p.age !== t.age ? (p.age < t.age ? '↑' : '↓') : null },
     { display: p.rank < 500 ? '#'+p.rank : 'N/A', result: gradeNum(p.rank, t.rank, rankRange), arrow: p.rank !== t.rank ? (p.rank < t.rank ? '↑' : '↓') : null },
     { display: String(p.pro), result: gradeNum(p.pro, t.pro, 2), arrow: p.pro !== t.pro ? (p.pro < t.pro ? '↑' : '↓') : null },
     { display: String(p.majors), result: gradeNum(p.majors, t.majors, 2), arrow: p.majors !== t.majors ? (p.majors < t.majors ? '↑' : '↓') : null },
     { display: tourDisplay(p.tour), result: tourGrade(p.tour, t.tour), arrow: null },
   ];
-  return defs.map(d => { const cell = document.createElement('div'); cell.className = `cell ${d.result}`; if (d.arrow && d.result !== 'correct') { cell.innerHTML = d.display + `<span class="arrow">${d.arrow}</span>`; } else { cell.textContent = d.display; } return cell; });
+  return defs.map((d, i) => {
+    const cell = document.createElement('div');
+    cell.className = `cell ${d.result}`;
+    if (d.arrow && d.result !== 'correct') {
+      cell.innerHTML = d.display + `<span class="arrow">${d.arrow}</span>`;
+    } else {
+      cell.textContent = d.display;
+    }
+    return cell;
+  });
 }
+
 function setMsg(txt) { document.getElementById('msg').textContent = txt; }
+
 function submitGuess(name) {
   if (gameOver || !name.trim()) return;
   const player = PLAYERS.find(p => p.name.toLowerCase() === name.trim().toLowerCase());
   if (!player) { setMsg('Golfer not found — select from the dropdown.'); return; }
   if (guesses.find(g => g.player.name === player.name)) { setMsg('Already guessed that player.'); return; }
-  guesses.push({ player }); renderGrid(); renderPips();
-  document.getElementById('player-input').value = ''; document.getElementById('suggestions').classList.remove('show');
-  if (player.name === target.name) { gameOver = true; saveState(); setTimeout(() => showModal(true, getWinTitle(), false), 500); }
-  else if (guesses.length >= MAX) { gameOver = true; saveState(); setTimeout(() => showModal(false, 'Out of Bounds', false), 500); }
-  else { saveState(); setMsg(['Good start.','Check those clues.','Keep going.','Halfway there.','Stay focused.','Read the green.','Last chance.'][guesses.length - 1] || ''); }
+
+  guesses.push({ player });
+  renderGrid();
+  renderPips();
+  document.getElementById('player-input').value = '';
+  document.getElementById('suggestions').classList.remove('show');
+
+  if (player.name === target.name) {
+    gameOver = true;
+    saveState();
+    setTimeout(() => showModal(true, getWinTitle(), false), 500);
+  } else if (guesses.length >= MAX) {
+    gameOver = true;
+    saveState();
+    setTimeout(() => showModal(false, 'Out of Bounds', false), 500);
+  } else {
+    saveState();
+    const h = ['Good start.','Check those clues.','Keep going.','Halfway there.','Stay focused.','Read the green.','Last chance.'];
+    setMsg(h[guesses.length - 1] || '');
+  }
   document.getElementById('player-input').disabled = gameOver;
   document.getElementById('guess-btn').disabled = gameOver;
 }
+
 function buildShareText(won) {
-  const d = new Date(); const dateStr = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
+  const d = new Date();
+  const dateStr = `${d.getMonth()+1}/${d.getDate()}/${d.getFullYear()}`;
   const result = won ? `${guesses.length}/${MAX}` : `X/${MAX}`;
-  return `DeChambeaurdle ${dateStr} ${result}\n\n${guesses.map(g => buildEmojiRow(g.player).join('')).join('\n')}\n\n⛳ Play at https://dechambeaurdlee.netlify.app`;
+  const emojiRows = guesses.map(g => {
+    const cells = buildEmojiRow(g.player);
+    return cells.join('');
+  });
+  return `DeChambeaurdle ${dateStr} ${result}\n\n${emojiRows.join('\n')}\n\n⛳ Play at [your link here]`;
 }
+
 function buildEmojiRow(p) {
-  const t = target; const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
-  function tourGrade(a, b) { if (a === b) return 'correct'; const cat = x => x.startsWith('LIV') ? 'LIV' : x; return cat(a) === cat(b) ? 'close' : 'wrong'; }
-  return [p.name === t.name ? 'correct' : 'wrong', p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong', gradeNum(p.age, t.age, 3), gradeNum(p.rank, t.rank, rankRange), gradeNum(p.pro, t.pro, 2), gradeNum(p.majors, t.majors, 2), tourGrade(p.tour, t.tour)].map(g => g === 'correct' ? '🟩' : g === 'close' ? '🟨' : '⬜');
+  const t = target;
+  const rankRange = (p.rank < 150 && t.rank < 150) ? 15 : 60;
+  function tourGrade(a, b) {
+    if (a === b) return 'correct';
+    const cat = x => x.startsWith('LIV') ? 'LIV' : x;
+    return cat(a) === cat(b) ? 'close' : 'wrong';
+  }
+  const grades = [
+    p.name === t.name ? 'correct' : 'wrong',
+    p.nat === t.nat ? 'correct' : p.region === t.region ? 'close' : 'wrong',
+    gradeNum(p.age, t.age, 3),
+    gradeNum(p.rank, t.rank, rankRange),
+    gradeNum(p.pro, t.pro, 2),
+    gradeNum(p.majors, t.majors, 2),
+    tourGrade(p.tour, t.tour),
+  ];
+  return grades.map(g => g === 'correct' ? '🟩' : g === 'close' ? '🟨' : '⬜');
 }
+
+// ── RAFFLE ──────────────────────────────────────────
+const MC_U = 'eae8184ced';
+const MC_SERVER = 'us6';
+
+function getRaffleCount() { return parseInt(localStorage.getItem('dcb_raffle_count') || '0'); }
+function incrementRaffleCount() { const c = getRaffleCount() + 1; localStorage.setItem('dcb_raffle_count', c); return c; }
+function hasEnteredRaffle() { return !!localStorage.getItem('dcb_raffle_entered'); }
+function updateRaffleCounter() { const el = document.getElementById('raffle-count'); if (el) el.textContent = getRaffleCount(); }
+
+function submitRaffle() {
+  const email = document.getElementById('raffle-email').value.trim();
+  const msg = document.getElementById('raffle-msg');
+  if (!email || !email.includes('@')) {
+    msg.style.display = 'block'; msg.style.color = '#92400e';
+    msg.textContent = 'Please enter a valid email address.'; return;
+  }
+  const callbackName = 'mcCb_' + Date.now();
+  window[callbackName] = function(resp) {
+    if (resp.result === 'success') {
+      localStorage.setItem('dcb_raffle_entered', email);
+      incrementRaffleCount(); updateRaffleCounter();
+      msg.style.display = 'block'; msg.style.color = '#065f46';
+      msg.textContent = "🎉 You're entered! Good luck!";
+      document.getElementById('raffle-email').style.display = 'none';
+      document.getElementById('raffle-submit-btn').style.display = 'none';
+    } else {
+      msg.style.display = 'block'; msg.style.color = '#92400e';
+      msg.textContent = resp.msg && resp.msg.includes('already') ? "✓ You're already entered!" : 'Something went wrong — try again.';
+    }
+    delete window[callbackName];
+    document.getElementById(callbackName + '_script') && document.getElementById(callbackName + '_script').remove();
+  };
+  const url = `https://${MC_SERVER}.list-manage.com/subscribe/post-json?u=${MC_U}&id=${MC_U}&EMAIL=${encodeURIComponent(email)}&c=${callbackName}`;
+  const script = document.createElement('script');
+  script.id = callbackName + '_script';
+  script.src = url;
+  document.body.appendChild(script);
+}
+
 function showModal(won, title, isRestore) {
   let s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0');
-  if (!isRestore) { s = won ? s + 1 : 0; localStorage.setItem('dcbaurdle_streak', s); } else { s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0'); }
+  if (!isRestore) { s = won ? s + 1 : 0; localStorage.setItem('dcbaurdle_streak', s); }
+  else { s = parseInt(localStorage.getItem('dcbaurdle_streak') || '0'); }
   document.getElementById('m-icon').textContent = won ? '🏆' : '😔';
   document.getElementById('m-title').textContent = title;
-  document.getElementById('m-msg').textContent = won ? `Identified in ${guesses.length} guess${guesses.length !== 1 ? 'es' : ''}!` : (mode === 'daily' ? 'Better luck tomorrow.' : 'Better luck next time.');
+  document.getElementById('m-msg').textContent = won
+    ? `Identified in ${guesses.length} guess${guesses.length !== 1 ? 'es' : ''}!`
+    : (mode === 'daily' ? 'Better luck tomorrow.' : 'Better luck next time.');
   document.getElementById('m-answer').textContent = '⛳  ' + target.name;
   document.getElementById('s-guesses').textContent = won ? guesses.length : '✗';
   document.getElementById('s-streak').textContent = s;
-  const shareBtn = document.getElementById('share-btn'); const nextBtn = document.getElementById('next-btn'); const closeBtn = document.getElementById('close-btn');
-  if (mode === 'shuffle') { shareBtn.style.display = 'none'; nextBtn.style.display = 'inline-block'; closeBtn.style.display = 'none'; }
-  else { shareBtn.style.display = 'inline-block'; nextBtn.style.display = 'none'; closeBtn.style.display = 'inline-block'; }
+
+  // Raffle box — only in daily mode
+  const raffleBox = document.getElementById('raffle-box');
+  const raffleMsg = document.getElementById('raffle-msg');
+  const raffleEmail = document.getElementById('raffle-email');
+  const raffleBtn = document.getElementById('raffle-submit-btn');
+  if (mode === 'daily') {
+    raffleBox.style.display = 'block';
+    updateRaffleCounter();
+    if (hasEnteredRaffle()) {
+      raffleEmail.style.display = 'none'; raffleBtn.style.display = 'none';
+      raffleMsg.style.display = 'block'; raffleMsg.style.color = '#065f46';
+      raffleMsg.textContent = "✓ You're already entered in the raffle!";
+    } else {
+      raffleEmail.style.display = ''; raffleBtn.style.display = '';
+      raffleMsg.style.display = 'none'; raffleEmail.value = '';
+    }
+  } else {
+    raffleBox.style.display = 'none';
+  }
+
+  const shareBtn = document.getElementById('share-btn');
+  const nextBtn = document.getElementById('next-btn');
+  const closeBtn = document.getElementById('close-btn');
+  if (mode === 'shuffle') {
+    shareBtn.style.display = 'none'; nextBtn.style.display = 'inline-block'; closeBtn.style.display = 'none';
+  } else {
+    shareBtn.style.display = 'inline-block'; nextBtn.style.display = 'none'; closeBtn.style.display = 'inline-block';
+  }
   document.getElementById('overlay').classList.add('show');
 }
+
 function shareResult() {
   const won = guesses.length > 0 && guesses[guesses.length-1].player.name === target.name;
-  const txt = buildShareText(won); const btn = document.getElementById('share-btn');
-  const doFallback = () => { try { const ta = document.createElement('textarea'); ta.value = txt; ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none'; document.body.appendChild(ta); ta.focus(); ta.select(); document.execCommand('copy'); document.body.removeChild(ta); btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Share Result', 2000); } catch(e) { prompt('Copy your result:', txt); } };
-  if (navigator.clipboard && window.isSecureContext) { navigator.clipboard.writeText(txt).then(() => { btn.textContent = '✓ Copied!'; setTimeout(() => btn.textContent = '📋 Share Result', 2000); }).catch(doFallback); } else { doFallback(); }
+  const txt = buildShareText(won);
+  const btn = document.getElementById('share-btn');
+
+  // Try modern clipboard API first, fall back to textarea trick
+  const doFallback = () => {
+    try {
+      const ta = document.createElement('textarea');
+      ta.value = txt;
+      ta.style.cssText = 'position:fixed;top:0;left:0;opacity:0;pointer-events:none';
+      document.body.appendChild(ta);
+      ta.focus();
+      ta.select();
+      document.execCommand('copy');
+      document.body.removeChild(ta);
+      btn.textContent = '✓ Copied!';
+      setTimeout(() => btn.textContent = '📋 Share Result', 2000);
+    } catch(e) {
+      // Last resort: show the text so they can copy manually
+      prompt('Copy your result:', txt);
+    }
+  };
+
+  if (navigator.clipboard && window.isSecureContext) {
+    navigator.clipboard.writeText(txt)
+      .then(() => {
+        btn.textContent = '✓ Copied!';
+        setTimeout(() => btn.textContent = '📋 Share Result', 2000);
+      })
+      .catch(doFallback);
+  } else {
+    doFallback();
+  }
 }
-const inp = document.getElementById('player-input'); const box = document.getElementById('suggestions');
+
+// Autocomplete
+const inp = document.getElementById('player-input');
+const box = document.getElementById('suggestions');
+
 inp.addEventListener('input', () => {
-  const v = inp.value.trim().toLowerCase(); if (!v) { box.classList.remove('show'); return; }
+  const v = inp.value.trim().toLowerCase();
+  if (!v) { box.classList.remove('show'); return; }
   const used = new Set(guesses.map(g => g.player.name));
   const matches = PLAYERS.filter(p => p.name.toLowerCase().includes(v) && !used.has(p.name)).slice(0, 8);
   if (!matches.length) { box.classList.remove('show'); return; }
-  box.innerHTML = matches.map(p => `<div class="sugg-item" data-name="${p.name}"><span>${p.name}</span><span class="sugg-meta">${p.nat}</span></div>`).join('');
+  box.innerHTML = matches.map(p =>
+    `<div class="sugg-item" data-name="${p.name}">
+      <span>${p.name}</span>
+      <span class="sugg-meta">${p.nat}</span>
+    </div>`
+  ).join('');
   box.classList.add('show');
 });
-box.addEventListener('click', e => { const item = e.target.closest('.sugg-item'); if (item) { inp.value = item.dataset.name; box.classList.remove('show'); submitGuess(item.dataset.name); } });
+
+box.addEventListener('click', e => {
+  const item = e.target.closest('.sugg-item');
+  if (item) { inp.value = item.dataset.name; box.classList.remove('show'); submitGuess(item.dataset.name); }
+});
 document.getElementById('guess-btn').addEventListener('click', () => submitGuess(inp.value));
-inp.addEventListener('keydown', e => { if (e.key === 'Enter') submitGuess(inp.value); if (e.key === 'Escape') box.classList.remove('show'); });
-document.addEventListener('click', e => { if (!e.target.closest('.input-inner')) box.classList.remove('show'); });
-initGame();
-</script>
+inp.addEventListener('keydown', e => {
+  if (e.key === 'Enter') submitGuess(inp.value);
+  if (e.key === 'Escape') box.classList.remove('show');
+});
+document.addEventListener('click', e => {
+  if (!e.target.closest('.input-inner')) box.classList.remove('show');
+});
+
+initGame();</script>
+
 </body>
 </html>
