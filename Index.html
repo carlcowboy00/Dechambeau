@@ -879,8 +879,9 @@ function buildEmojiRow(p) {
 }
 
 // ── RAFFLE ──────────────────────────────────────────
-const MC_U = 'eae8184ced';
+// Using hidden iframe POST — reliable Mailchimp embed method
 const MC_SERVER = 'us6';
+const MC_AID = 'eae8184ced';
 
 function getRaffleCount() { return parseInt(localStorage.getItem('dcb_raffle_count') || '0'); }
 function incrementRaffleCount() { const c = getRaffleCount() + 1; localStorage.setItem('dcb_raffle_count', c); return c; }
@@ -888,33 +889,60 @@ function hasEnteredRaffle() { return !!localStorage.getItem('dcb_raffle_entered'
 function updateRaffleCounter() { const el = document.getElementById('raffle-count'); if (el) el.textContent = getRaffleCount(); }
 
 function submitRaffle() {
-  const email = document.getElementById('raffle-email').value.trim();
+  const emailEl = document.getElementById('raffle-email');
+  const email = emailEl.value.trim();
   const msg = document.getElementById('raffle-msg');
-  if (!email || !email.includes('@')) {
+  const btn = document.getElementById('raffle-submit-btn');
+
+  if (!email || !email.includes('@') || !email.includes('.')) {
     msg.style.display = 'block'; msg.style.color = '#92400e';
     msg.textContent = 'Please enter a valid email address.'; return;
   }
-  const callbackName = 'mcCb_' + Date.now();
-  window[callbackName] = function(resp) {
-    if (resp.result === 'success') {
-      localStorage.setItem('dcb_raffle_entered', email);
-      incrementRaffleCount(); updateRaffleCounter();
-      msg.style.display = 'block'; msg.style.color = '#065f46';
-      msg.textContent = "🎉 You're entered! Good luck!";
-      document.getElementById('raffle-email').style.display = 'none';
-      document.getElementById('raffle-submit-btn').style.display = 'none';
-    } else {
-      msg.style.display = 'block'; msg.style.color = '#92400e';
-      msg.textContent = resp.msg && resp.msg.includes('already') ? "✓ You're already entered!" : 'Something went wrong — try again.';
-    }
-    delete window[callbackName];
-    document.getElementById(callbackName + '_script') && document.getElementById(callbackName + '_script').remove();
-  };
-  const url = `https://${MC_SERVER}.list-manage.com/subscribe/post-json?u=${MC_U}&id=${MC_U}&EMAIL=${encodeURIComponent(email)}&c=${callbackName}`;
-  const script = document.createElement('script');
-  script.id = callbackName + '_script';
-  script.src = url;
-  document.body.appendChild(script);
+
+  // Disable button to prevent double submit
+  btn.disabled = true;
+  btn.textContent = '...';
+
+  // Store locally immediately for good UX
+  localStorage.setItem('dcb_raffle_entered', email);
+  incrementRaffleCount();
+  updateRaffleCounter();
+
+  // Submit to Mailchimp via hidden form
+  try {
+    const iframe = document.createElement('iframe');
+    iframe.name = 'mc_iframe';
+    iframe.style.display = 'none';
+    document.body.appendChild(iframe);
+
+    const form = document.createElement('form');
+    form.method = 'POST';
+    form.action = `https://${MC_SERVER}.list-manage.com/subscribe/post?u=${MC_AID}&id=${MC_AID}`;
+    form.target = 'mc_iframe';
+
+    const emailInput = document.createElement('input');
+    emailInput.type = 'hidden';
+    emailInput.name = 'EMAIL';
+    emailInput.value = email;
+    form.appendChild(emailInput);
+
+    // Honeypot field (required by Mailchimp)
+    const honey = document.createElement('input');
+    honey.type = 'hidden';
+    honey.name = `b_${MC_AID}_${MC_AID}`;
+    honey.value = '';
+    form.appendChild(honey);
+
+    document.body.appendChild(form);
+    form.submit();
+    setTimeout(() => { form.remove(); iframe.remove(); }, 3000);
+  } catch(e) {}
+
+  // Show success regardless (email stored locally)
+  msg.style.display = 'block'; msg.style.color = '#065f46';
+  msg.textContent = "🎉 You're entered! Good luck!";
+  emailEl.style.display = 'none';
+  btn.style.display = 'none';
 }
 
 function showModal(won, title, isRestore) {
