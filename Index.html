@@ -315,9 +315,11 @@ align-items: center; justify-content: center;
 background: #fff;
 border: 2px solid var(–text);
 border-radius: 14px;
-padding: 36px 30px;
+padding: 24px 20px;
 max-width: 400px;
 width: 92%;
+max-height: 90vh;
+overflow-y: auto;
 text-align: center;
 box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
 }
@@ -762,7 +764,7 @@ function renderGrid() {
         row.appendChild(cell);
       });
     } else {
-      for (let j = 0; j < 6; j++) {
+      for (let j = 0; j < 7; j++) {
         const c = document.createElement('div');
         c.className = 'cell empty';
         row.appendChild(c);
@@ -855,7 +857,7 @@ function buildShareText(won) {
     const cells = buildEmojiRow(g.player);
     return cells.join('');
   });
-  return `DeChambeaurdle ${dateStr} ${result}\n\n${emojiRows.join('\n')}\n\n⛳ Play at [your link here]`;
+  return `DeChambeaurdle ${dateStr} ${result}\n\n${emojiRows.join('\n')}\n\n⛳ Play at https://dechambeaurdlee.netlify.app`;
 }
 
 function buildEmojiRow(p) {
@@ -917,7 +919,7 @@ function submitRaffle() {
 
     const form = document.createElement('form');
     form.method = 'POST';
-    form.action = `https://${MC_SERVER}.list-manage.com/subscribe/post?u=${MC_AID}&id=${MC_AID}`;
+    form.action = `https://us6.list-manage.com/subscribe/post?u=6aef5402cf8cd153293f&id=${MC_AID}`;
     form.target = 'mc_iframe';
 
     const emailInput = document.createElement('input');
@@ -929,7 +931,7 @@ function submitRaffle() {
     // Honeypot field (required by Mailchimp)
     const honey = document.createElement('input');
     honey.type = 'hidden';
-    honey.name = `b_${MC_AID}_${MC_AID}`;
+    honey.name = `b_6aef5402cf8cd153293f_${MC_AID}`;
     honey.value = '';
     form.appendChild(honey);
 
