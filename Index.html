@@ -15,40 +15,22 @@
 </script>
 <link href="https://fonts.googleapis.com/css2?family=Bebas+Neue&family=DM+Sans:wght@300;400;500;600&family=DM+Serif+Display:ital@0;1&display=swap" rel="stylesheet">
 <style>
-  :root {
-    --bg: #f7f4ee;
-    --bg2: #ede9e0;
-    --border: #d4cfc4;
-    --text: #1c1a16;
-    --text2: #6b6459;
-    --correct-bg: #d1fae5;
-    --correct-border: #6ee7b7;
-    --correct-text: #065f46;
-    --close-bg: #fef3c7;
-    --close-border: #fcd34d;
-    --close-text: #92400e;
-    --wrong-bg: #f1f5f9;
-    --wrong-border: #cbd5e1;
-    --wrong-text: #334155;
-    --gold: #b8860b;
-    --header-bg: #1c1a16;
-  }
   * { box-sizing: border-box; margin: 0; padding: 0; }
   body {
-    background: var(--bg);
-    color: var(--text);
+    background: #f7f4ee;
+    color: #1c1a16;
     font-family: 'DM Sans', sans-serif;
     min-height: 100vh;
   }
 
 /* HEADER */
 header {
-background: var(–header-bg);
+background: #1c1a16;
 padding: 14px 24px;
 display: flex;
 align-items: center;
 justify-content: space-between;
-border-bottom: 3px solid var(–gold);
+border-bottom: 3px solid #b8860b;
 }
 .header-left { display: flex; align-items: baseline; gap: 14px; }
 h1 {
@@ -90,7 +72,7 @@ transition: all 0.18s;
 white-space: nowrap;
 }
 .mode-btn.active {
-background: var(–gold);
+background: #b8860b;
 color: #1c1a16;
 }
 .mode-btn:not(.active):hover { color: rgba(247,244,238,0.85); }
@@ -101,7 +83,7 @@ position: sticky;
 top: 0;
 z-index: 80;
 background: #fff;
-border-bottom: 1px solid var(–border);
+border-bottom: 1px solid #d4cfc4;
 box-shadow: 0 2px 10px rgba(0,0,0,0.07);
 padding: 12px 16px;
 }
@@ -116,23 +98,23 @@ position: relative;
 .search-ico {
 position: absolute; left: 12px; top: 50%;
 transform: translateY(-50%);
-color: var(–text2); font-size: 15px; pointer-events: none;
+color: #6b6459; font-size: 15px; pointer-events: none;
 }
 #player-input {
 width: 100%;
-border: 2px solid var(–border);
+border: 2px solid #d4cfc4;
 border-radius: 8px;
-background: var(–bg);
+background: #f7f4ee;
 padding: 10px 12px 10px 38px;
 font-family: ‘DM Sans’, sans-serif;
 font-size: 14px;
 font-weight: 500;
-color: var(–text);
+color: #1c1a16;
 outline: none;
 transition: border-color 0.2s;
 }
-#player-input:focus { border-color: var(–text); background: #fff; }
-#player-input::placeholder { color: var(–text2); font-weight: 400; }
+#player-input:focus { border-color: #1c1a16; background: #fff; }
+#player-input::placeholder { color: #6b6459; font-weight: 400; }
 #player-input:disabled { opacity: 0.4; cursor: not-allowed; }
 
 .suggestions {
@@ -140,7 +122,7 @@ position: absolute;
 top: calc(100% + 5px);
 left: 0; right: 0;
 background: #fff;
-border: 2px solid var(–text);
+border: 2px solid #1c1a16;
 border-radius: 8px;
 max-height: 240px;
 overflow-y: auto;
@@ -157,15 +139,15 @@ cursor: pointer;
 display: flex;
 justify-content: space-between;
 align-items: center;
-border-bottom: 1px solid var(–bg2);
+border-bottom: 1px solid #ede9e0;
 transition: background 0.1s;
 }
 .sugg-item:last-child { border-bottom: none; }
-.sugg-item:hover { background: var(–bg); }
-.sugg-meta { font-size: 11px; color: var(–text2); font-weight: 400; }
+.sugg-item:hover { background: #f7f4ee; }
+.sugg-meta { font-size: 11px; color: #6b6459; font-weight: 400; }
 
 #guess-btn {
-background: var(–text);
+background: #1c1a16;
 color: #f7f4ee;
 border: none;
 border-radius: 8px;
@@ -192,7 +174,7 @@ padding: 18px 16px 60px;
 /* HOW TO */
 details.how-to {
 margin-bottom: 14px;
-border: 1.5px solid var(–border);
+border: 1.5px solid #d4cfc4;
 border-radius: 8px;
 background: #fff;
 overflow: hidden;
@@ -204,7 +186,7 @@ font-size: 10px;
 font-weight: 600;
 letter-spacing: 2px;
 text-transform: uppercase;
-color: var(–text2);
+color: #6b6459;
 list-style: none;
 display: flex;
 justify-content: space-between;
@@ -215,9 +197,9 @@ details.how-to[open] summary::after { content: ‘▴’; }
 .how-body {
 padding: 12px 14px 14px;
 font-size: 13px;
-color: var(–text2);
+color: #6b6459;
 line-height: 1.75;
-border-top: 1px solid var(–border);
+border-top: 1px solid #d4cfc4;
 }
 
 /* LEGEND */
@@ -228,7 +210,7 @@ gap: 10px;
 flex-wrap: wrap;
 margin-bottom: 14px;
 }
-.legend-lbl { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: var(–text2); }
+.legend-lbl { font-size: 10px; font-weight: 600; letter-spacing: 2px; text-transform: uppercase; color: #6b6459; }
 .lchip {
 padding: 3px 11px;
 border-radius: 5px;
@@ -236,9 +218,9 @@ font-size: 11px;
 font-weight: 700;
 letter-spacing: 0.3px;
 }
-.lc-g { background: var(–correct-bg); color: var(–correct-text); border: 1.5px solid var(–correct-border); }
-.lc-y { background: var(–close-bg);   color: var(–close-text);   border: 1.5px solid var(–close-border); }
-.lc-s { background: var(–wrong-bg);   color: var(–wrong-text);   border: 1.5px solid var(–wrong-border); }
+.lc-g { background: #d1fae5; color: #065f46; border: 1.5px solid #6ee7b7; }
+.lc-y { background: #fef3c7;   color: #92400e;   border: 1.5px solid #fcd34d; }
+.lc-s { background: #f1f5f9;   color: #334155;   border: 1.5px solid #cbd5e1; }
 
 /* MESSAGE */
 .msg-bar {
@@ -246,7 +228,7 @@ min-height: 26px;
 font-family: ‘DM Serif Display’, serif;
 font-style: italic;
 font-size: 14px;
-color: var(–text2);
+color: #6b6459;
 margin-bottom: 12px;
 }
 
@@ -263,7 +245,7 @@ font-size: 9px;
 font-weight: 700;
 letter-spacing: 1.5px;
 text-transform: uppercase;
-color: var(–text2);
+color: #6b6459;
 padding: 4px 2px;
 }
 .ch:first-child { text-align: left; padding-left: 10px; }
@@ -289,10 +271,10 @@ justify-content: center;
 line-height: 1.3;
 }
 .cell:first-child { text-align: left; justify-content: flex-start; padding-left: 10px; font-size: 12px; }
-.cell.empty   { background: #fff; border: 1.5px solid var(–border); color: transparent; }
-.cell.correct { background: var(–correct-bg); border: 1.5px solid var(–correct-border); color: var(–correct-text); }
-.cell.close   { background: var(–close-bg);   border: 1.5px solid var(–close-border);   color: var(–close-text); }
-.cell.wrong   { background: var(–wrong-bg);   border: 1.5px solid var(–wrong-border);   color: var(–wrong-text); }
+.cell.empty   { background: #fff; border: 1.5px solid #d4cfc4; color: transparent; }
+.cell.correct { background: #d1fae5; border: 1.5px solid #6ee7b7; color: #065f46; }
+.cell.close   { background: #fef3c7;   border: 1.5px solid #fcd34d;   color: #92400e; }
+.cell.wrong   { background: #f1f5f9;   border: 1.5px solid #cbd5e1;   color: #334155; }
 
 .arrow { font-size: 10px; margin-left: 3px; opacity: 0.65; }
 
@@ -313,7 +295,7 @@ align-items: center; justify-content: center;
 .overlay.show { display: flex; }
 .modal {
 background: #fff;
-border: 2px solid var(–text);
+border: 2px solid #1c1a16;
 border-radius: 14px;
 padding: 24px 20px;
 max-width: 400px;
@@ -328,38 +310,38 @@ box-shadow: 6px 6px 0 rgba(0,0,0,0.15);
 font-family: ‘Bebas Neue’, sans-serif;
 font-size: clamp(1.4rem, 5vw, 2rem);
 letter-spacing: 4px;
-color: var(–text);
+color: #1c1a16;
 margin-bottom: 6px;
 }
-.modal p { font-size: 14px; color: var(–text2); line-height: 1.6; }
+.modal p { font-size: 14px; color: #6b6459; line-height: 1.6; }
 .answer-box {
 font-family: ‘DM Serif Display’, serif;
 font-size: 19px;
-color: var(–text);
+color: #1c1a16;
 margin: 14px 0;
 padding: 12px;
-background: var(–bg);
+background: #f7f4ee;
 border-radius: 8px;
-border: 1.5px solid var(–border);
+border: 1.5px solid #d4cfc4;
 }
 .m-stats { display: flex; justify-content: center; gap: 32px; margin: 14px 0 20px; }
-.s-num { font-family: ‘Bebas Neue’, sans-serif; font-size: 2.2rem; letter-spacing: 2px; color: var(–text); line-height: 1; }
-.s-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: var(–text2); }
+.s-num { font-family: ‘Bebas Neue’, sans-serif; font-size: 2.2rem; letter-spacing: 2px; color: #1c1a16; line-height: 1; }
+.s-lbl { font-size: 9px; letter-spacing: 2px; text-transform: uppercase; color: #6b6459; }
 .m-btn {
-background: var(–text); color: #f7f4ee; border: none;
+background: #1c1a16; color: #f7f4ee; border: none;
 border-radius: 8px; padding: 12px 20px;
 font-family: ‘DM Sans’, sans-serif;
 font-size: 12px; font-weight: 600; letter-spacing: 1.5px; text-transform: uppercase;
 cursor: pointer; margin: 4px;
 }
 .m-btn:hover { background: #333; }
-.m-btn-close { background: transparent; color: var(–text2); border: 1.5px solid var(–border); }
-.m-btn-close:hover { background: var(–bg); }
+.m-btn-close { background: transparent; color: #6b6459; border: 1.5px solid #d4cfc4; }
+.m-btn-close:hover { background: #f7f4ee; }
 .modal-btns { display: flex; gap: 8px; justify-content: center; flex-wrap: wrap; }
 
 ::-webkit-scrollbar { width: 4px; }
-::-webkit-scrollbar-thumb { background: var(–border); border-radius: 2px; }
-.bmc-bar { text-align: center; padding: 24px 16px 40px; border-top: 1px solid var(–border); margin-top: 10px; }
+::-webkit-scrollbar-thumb { background: #d4cfc4; border-radius: 2px; }
+.bmc-bar { text-align: center; padding: 24px 16px 40px; border-top: 1px solid #d4cfc4; margin-top: 10px; }
 .bmc-btn { display: inline-flex; align-items: center; gap: 8px; background: #FFDD00; color: #000; font-family: ‘DM Sans’, sans-serif; font-size: 13px; font-weight: 700; letter-spacing: 0.5px; padding: 10px 20px; border-radius: 8px; text-decoration: none; transition: opacity 0.15s; }
 .bmc-btn:hover { opacity: 0.85; }
 
@@ -408,9 +390,9 @@ h1 { font-size: 2rem; }
     <summary>How to Play</summary>
     <div class="how-body">
       Guess the mystery professional golfer in <strong>8 attempts</strong>. Each guess reveals clues across 7 categories.<br><br>
-      <span style="color:var(--correct-text);font-weight:700">Green</span> = exact &nbsp;·&nbsp;
-      <span style="color:var(--close-text);font-weight:700">Yellow</span> = close (age ±3, rank ±15, turned pro ±2, majors ±2, same region) &nbsp;·&nbsp;
-      <span style="color:var(--wrong-text);font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or PGA Past.
+      <span style="color:#065f46;font-weight:700">Green</span> = exact &nbsp;·&nbsp;
+      <span style="color:#92400e;font-weight:700">Yellow</span> = close (age ±3, rank ±15, turned pro ±2, majors ±2, same region) &nbsp;·&nbsp;
+      <span style="color:#334155;font-weight:700">Grey</span> = wrong &nbsp;·&nbsp; Arrows ↑↓ hint higher/lower. Tour shows: PGA (current), LIV (with team), or PGA Past.
     </div>
   </details>
 
